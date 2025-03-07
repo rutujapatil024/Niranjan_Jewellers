@@ -1,0 +1,15 @@
+.header {
+  height: 501px; /* Adjust height as needed */
+  overflow: hidden;
+}
+
+.header-contents {
+  height: 100%; 
+}
+
+.slick-slide img {
+  width: 100%; /* Increase image size by 50% */
+  height: auto; 
+  transform: scale(1); /* Scale down to fit within container */ 
+  transform-origin: center center; 
+}

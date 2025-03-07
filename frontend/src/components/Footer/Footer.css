@@ -1,0 +1,105 @@
+.footer {
+  color: maroon;
+  background-color: wheat;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px; /* Reduced gap further */
+  padding: 10px 1vw; /* Adjusted padding */
+  padding-top: 10px;
+  margin-top: 10px; /* Reduced margin */
+}
+.footer-help a:visited,
+.footer-content-center a:visited,
+.footer-content-right a:visited {
+  color: maroon; /* Ensure the color stays the same in all states */
+}
+
+.footer-content {
+  width: 100%;
+  display: flex; /* Changed from grid to flex for better control */
+  justify-content: space-between; /* Ensures proper alignment */
+  gap: 10px; /* Reduced gap between columns */
+}
+
+.footer-content-left img {
+  width: 80px; /* Further reduced image size */
+}
+
+.footer-social-icons {
+  display: flex;
+  gap: 20px; /* Reduced gap */
+  cursor: pointer;
+}
+
+.footer-social-icons img {
+  width: 40px;
+  height: auto;
+  transition: transform 0.3s ease-in-out; /* Smooth zoom effect */
+}
+
+.footer-social-icons img:hover {
+  transform: scale(1.2); /* Zoom effect on hover */
+}
+
+.footer-content-left,
+.footer-content-center,
+.footer-content-right,
+.footer-help {
+  display: flex;
+  font-size: 16px; /* Adjusted font size */
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px; /* Adjusted gap */
+
+}
+
+.footer-help {
+  margin-right: 20px; /* Reduced space between footer-help and footer-content-center */
+}
+
+.footer-help h2 {
+  color: maroon;
+  margin-bottom: 5px; /* Reduced margin */
+}
+
+.footer-help ul,
+.footer-content-center ul,
+.footer-content-right ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.footer-help li,
+.footer-content-center li,
+.footer-content-right li {
+  margin-bottom: 5px; /* Adjusted spacing */
+  cursor: pointer;
+  color: maroon;
+}
+
+.footer hr {
+  width: 100%;
+  height: 2px;
+  margin: 10px 0; /* Reduced margin */
+  background-color: maroon;
+  border: none;
+}
+
+.footer-copyright {
+  margin-top: 0px;
+  font-size: 16px;
+  text-align: center;
+  color: maroon;
+}
+.footer-help a,
+.footer-content-center a,
+.footer-content-right a {
+  text-decoration: none; /* Removes underline */
+}
+
+.footer-help a:hover,
+.footer-content-center a:hover,
+.footer-content-right a:hover {
+  text-decoration: underline; 
+}

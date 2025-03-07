@@ -1,0 +1,80 @@
+.video-gallery {
+    display: grid;
+    grid-template-columns: 0.6fr 1.4fr; /* Adjusted column ratio */
+    gap: 12px;
+    /*padding: 70px; /* Reduced padding for a tighter look */
+    background-color: #f5f5f5;
+    align-items: center;
+    margin-top: 10px;
+    margin-left: 140px;
+    margin-right: 140px;
+}
+.title h1{
+    margin-top: 30px;
+    padding: 20px;
+}
+/* Left Vertical Video */
+.video-container.vertical {
+    height: 595px; /* Slightly smaller */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 10px;
+}
+
+.video-container.vertical video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Right Side - 4 Landscape Videos */
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.video-container {
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.video-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Adjusting Landscape Video Heights */
+.video-container.landscape {
+    height: 280px; /* Slightly increased for a balanced look */
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .video-gallery {
+        grid-template-columns: 1fr;
+        padding: 20px;
+    }
+
+    .video-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, auto);
+    }
+
+    .video-container.vertical {
+        height: 200px;
+    }
+
+    .video-container.landscape {
+        height: 110px;
+    }
+}
