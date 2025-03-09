@@ -55,7 +55,8 @@ const removeJewellery = async (req, res) => {
   
 
     try {
-        console.log("Received body:", req); 
+        console.log("Received request body:", req.body); // Debugging line
+        //console.log("Received body:", req); 
         const { id } = req.body;
     
         const result = await JewelleryModel.findByIdAndDelete(id);
@@ -66,6 +67,7 @@ const removeJewellery = async (req, res) => {
 
         res.status(200).json({ success: true, message: "Jewellery item removed successfully" });
     } catch (error) {
+        console.error("Error removing jewellery:", error); // Debugging line
         res.status(500).json({
             success: false,
             message: "Failed to remove jewellery",
@@ -74,8 +76,35 @@ const removeJewellery = async (req, res) => {
     }
 };
 
+const updateJewellery = async (req, res) => {
+    try {
+        const { id, name, description, category, subcategory, size, gender, price } = req.body;
+        
+        const updatedData = { name, description, category, subcategory, size, gender, price };
+
+        if (req.file) {
+            updatedData.image = {
+                data: req.file.buffer,
+                contentType: req.file.mimetype
+            };
+        }
+
+        const updatedJewel = await JewelleryModel.findByIdAndUpdate(id, updatedData, { new: true });
+
+        if (!updatedJewel) {
+            return res.status(404).json({ success: false, message: "Jewellery item not found" });
+        }
+
+        res.status(200).json({ success: true, message: "Jewellery updated successfully" });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Failed to update jewellery", error: error.message });
+    }
+};
+
 module.exports = {
     addJewellery,
     getJewellery,
-    removeJewellery
+    removeJewellery,
+    updateJewellery
 };
+

@@ -14,5 +14,6 @@ router.post('/register', registerUser);
 router.post('/jewellery', upload.single('image'), jewellery.addJewellery);
 router.get('/jewellery', jewellery.getJewellery);
 router.post('/jewellery/remove', jewellery.removeJewellery);
+router.post('/jewellery/update', upload.single('image'), jewellery.updateJewellery);
 
 module.exports = router;
