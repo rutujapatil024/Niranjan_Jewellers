@@ -22,9 +22,9 @@ const List = ({ url }) => {
   const removejewel = async (jewelId) => {
 
     try {
-      const formData = new FormData();
-      formData.append("id",jewelId)
-        const response = await axios.post("http://localhost:3001/api/auth/jewellery/remove", formData);
+     
+        const response = await axios.post("http://localhost:3001/api/auth/jewellery/remove",  { id: jewelId }, // Send as JSON
+          { headers: { "Content-Type": "application/json" }});
 
         if (response.data.success) {
             toast.success(response.data.message);

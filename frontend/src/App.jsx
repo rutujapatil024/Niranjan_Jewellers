@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Navbar from './components/Navbar/Navbar';
 import { BrowserRouter, Routes, Route, ScrollRestoration } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import Home from './pages/Home/home';
 import Wishlist from './pages/Wishlist/Wishlist';
 import PlaceOrder from './pages/PlaceOrder/placeorder';
@@ -29,8 +30,8 @@ const App = () => {
             {showLogin && <LoginPopup setShowLogin={setShowLogin}/>}
             <div className='app'>
                 <Navbar setShowLogin={setShowLogin} />
+                <ToastContainer />
                 <Routes>
-                    
                     <Route path='/' element={<Home />} />
                     <Route path="/login" element={<LoginPopup />} />
                     <Route path="/cart" element={<Cart />} />

@@ -52,11 +52,12 @@ const getJewellery = async (req, res) => {
 };
 
 const removeJewellery = async (req, res) => {
-    console.log("Received body:", req.body); 
-    const { id } = req.body;
-
+  
 
     try {
+        console.log("Received body:", req); 
+        const { id } = req.body;
+    
         const result = await JewelleryModel.findByIdAndDelete(id);
 
         if (!result) {

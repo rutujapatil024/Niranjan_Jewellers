@@ -1,10 +1,10 @@
 import React, { createContext, useState, useEffect } from "react";
-import { product_list as initialProducts } from '../assets/assets';
+import axios from "axios";
 
 export const StoreContext = createContext();
 
 const StoreProvider = ({ children }) => {
-    const [product_list, setProductList] = useState(initialProducts, []);
+    const [product_list, setProductList] = useState( []);
     const [wishlist, setWishlist] = useState([]);
     const [cart, setCart] = useState([]);
     const [token, setToken] = useState("");
@@ -32,6 +32,23 @@ const StoreProvider = ({ children }) => {
             localStorage.setItem("cart", JSON.stringify(cart));
         }
     }, [wishlist, cart, token]);
+
+     // Fetch product list from backend once on mount
+     useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await axios.get(`${url}/api/auth/jewellery`);
+                if (response.status === 200) {
+                    setProductList(response.data);
+                }
+            } catch (error) {
+                console.error("Error fetching product list:", error);
+            }
+        };
+
+        fetchProducts();
+    }, []);
+
 
     // Function to clear wishlist & cart on logout
     const clearCartAndWishlistOnLogout = () => {

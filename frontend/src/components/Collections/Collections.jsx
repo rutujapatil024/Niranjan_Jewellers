@@ -1,12 +1,13 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './Collections.css';
-import { StoreContext } from '../../Context/StoreContext';
 import Jewelitem from '../../components/Jewelitem/Jewelitem';
+import { toast } from 'react-toastify';
 
 const Collections = () => {
-    const { product_list } = useContext(StoreContext);
     const navigate = useNavigate();
+    const [list, setList] = useState([]);
     const [selectedFilters, setSelectedFilters] = useState({
         category: [],
         gender: [],
@@ -19,6 +20,27 @@ const Collections = () => {
         metal: ['Gold', 'Silver', 'Platinum', 'Diamond']
     };
 
+    // Fetch products from backend
+    const fetchList = async () => {
+        try {
+            const response = await axios.get("http://localhost:3001/api/auth/jewellery");
+            if (response.status === 200) {
+                setList(response.data);
+            } else {
+                toast.error("Failed to fetch products");
+            }
+        } catch (error) {
+            toast.error("Error fetching product list");
+            console.error("Error:", error);
+        }
+    };
+
+    // Fetch data on component mount
+    useEffect(() => {
+        fetchList();
+    }, []);
+
+    // Handle filter change
     const handleFilterChange = (filterType, value) => {
         setSelectedFilters(prevFilters => {
             const isSelected = prevFilters[filterType].includes(value);
@@ -31,7 +53,8 @@ const Collections = () => {
         });
     };
 
-    const filteredProducts = product_list.filter((item) => {
+    // Apply filters to product list
+    const filteredProducts = list.filter((item) => {
         return (
             (selectedFilters.category.length === 0 || selectedFilters.category.includes(item.category_name)) &&
             (selectedFilters.gender.length === 0 || selectedFilters.gender.includes(item.gender)) &&
@@ -39,6 +62,7 @@ const Collections = () => {
         );
     });
 
+    // Navigate to product details page
     const handleProductClick = (id) => {
         navigate(`/item-details/${id}`);
     };
