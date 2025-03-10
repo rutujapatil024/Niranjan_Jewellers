@@ -15,8 +15,8 @@ const Collections = () => {
     });
 
     const filters = {
-        category: ['Ring', 'Bangle', 'Earrings', 'Mangalsutra', 'Chain', 'Anklet', 'Gold Coin and Bar', 'Silver Coin and Bar'],
-        gender: ['Female', 'Male'],
+        category: ['Rings', 'Bangles', 'Earrings', 'Mangalsutra', 'Gold Chain', 'Anklet', 'Gold Coin & Bars', 'Silver Coin & Bars'],
+        gender: ['Women', 'Men', 'Kids'],
         metal: ['Gold', 'Silver', 'Platinum', 'Diamond']
     };
 
@@ -25,6 +25,7 @@ const Collections = () => {
         try {
             const response = await axios.get("http://localhost:3001/api/auth/jewellery");
             if (response.status === 200) {
+                console.log("Fetched List:", response.data); // Debugging API response
                 setList(response.data);
             } else {
                 toast.error("Failed to fetch products");
@@ -56,9 +57,9 @@ const Collections = () => {
     // Apply filters to product list
     const filteredProducts = list.filter((item) => {
         return (
-            (selectedFilters.category.length === 0 || selectedFilters.category.includes(item.category_name)) &&
-            (selectedFilters.gender.length === 0 || selectedFilters.gender.includes(item.gender)) &&
-            (selectedFilters.metal.length === 0 || selectedFilters.metal.includes(item.metal))
+            (selectedFilters.category.length === 0 || selectedFilters.category.map(c => c.toLowerCase()).includes(item.category.toLowerCase())) &&
+            (selectedFilters.gender.length === 0 || selectedFilters.gender.map(g => g.toLowerCase()).includes(item.gender.toLowerCase())) &&
+            (selectedFilters.metal.length === 0 || selectedFilters.metal.map(m => m.toLowerCase()).includes(item.subcategory.toLowerCase()))
         );
     });
 

@@ -26,23 +26,28 @@ const List = ({ url }) => {
   }
 
   const removeJewellery = async (jewelId) => {
-
     try {
-      console.log("Removing jewellery with ID:", jewelId); // Debugging line
-      const response = await axios.post("http://localhost:3001/api/auth/jewellery/remove", { id: jewelId }, // Send as JSON
-        { headers: { "Content-Type": "application/json" } } )// Ensure correct headers
+        console.log("Removing jewellery with ID:", jewelId); // Debugging log
 
-      if (response.data.success) {
-        toast.success(response.data.message);
-        await fetchList();
-      } else {
-        toast.error(response.data.message || "Failed to remove item");
-      }
+        const response = await fetch("http://localhost:3001/api/auth/jewellery/remove", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: jewelId }), // Convert to JSON string
+        });
+
+        const data = await response.json(); // Parse JSON response
+
+        if (response.ok && data.success) {
+            toast.success(data.message);
+            await fetchList(); // Refresh list
+        } else {
+            toast.error(data.message || "Failed to remove item");
+        }
     } catch (error) {
-      console.error("Error in removejewel function:", error); // Debugging line
-      toast.error(error.response?.data?.message || "Error removing jewellery item");
+        console.error("Error in removeJewellery function:", error);
+        toast.error("Error removing jewellery item");
     }
-  };
+};
 
   useEffect(() => {
     fetchList();
@@ -83,7 +88,7 @@ const List = ({ url }) => {
               <p>{item.category}</p>
               <p>{item.subcategory}</p>
               <p>{item.gender}</p>
-              <p>{item.size}</p>
+              <p>{item.sizes[0]}</p>
               <p>Rs.{item.price}</p>
               <div className="action-buttons">
                 <p onClick={() => {

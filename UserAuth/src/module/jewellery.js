@@ -32,6 +32,7 @@ const addJewellery = async (req, res) => {
 const getJewellery = async (req, res) => {
     try {
         const jewellery = await JewelleryModel.find();
+        console.log(jewellery[0])
         const jewelsWithImages = jewellery.map(jewel => ({
             _id: jewel._id,
             name: jewel.name,
@@ -40,7 +41,7 @@ const getJewellery = async (req, res) => {
             category: jewel.category,
             subcategory: jewel.subcategory,
             gender: jewel.gender,
-            size: jewel.size,
+            sizes: jewel.size,
             image: jewel.image?.data
                 ? `data:${jewel.image.contentType};base64,${jewel.image.data.toString('base64')}`
                 : null

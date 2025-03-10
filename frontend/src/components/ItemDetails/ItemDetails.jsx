@@ -62,17 +62,24 @@ const ItemDetails = () => {
                 <p className="price">₹{item.price}</p>
                 
                 {/* Size selector if sizes are available */}
-                {Array.isArray(item.sizes) && item.sizes.length > 0 && (
-                    <div className="size-selector">
-                        <label>Select Size:</label>
-                        <select value={selectedSize} onChange={(e) => setSelectedSize(e.target.value)}>
-                            <option value="">Choose Size</option>
-                            {item.sizes.map((size, index) => (
-                                <option key={index} value={size}>{size}</option>
-                            ))}
-                        </select>
-                    </div>
-                )}
+                {item.sizes && Array.isArray(item.sizes) ? (
+    item.sizes.length > 0 ? (
+        <div className="size-selector">
+            <label>Select Size:</label>
+            <select value={selectedSize} onChange={(e) => setSelectedSize(e.target.value)}>
+                <option value="">Choose Size</option>
+                {item.sizes.map((size, index) => (
+                    <option key={index} value={size}>{size}</option>
+                ))}
+            </select>
+        </div>
+    ) : (
+        <p className="error-message">No sizes available for this item.</p>
+    )
+) : (
+    <p className="error-message">Sizes data not found.</p>
+)}
+
 
                 <div className="actions">
                     {cartItem ? (

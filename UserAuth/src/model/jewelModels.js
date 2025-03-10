@@ -11,7 +11,7 @@ const jewelSchema = new mongoose.Schema({
     category:{type:String},
     subcategory:{type:String},
     gender:{type:String},
-    size:{type:String}
+    size: { type: [String], default: [] }, 
 })
 
 const jewelModel = mongoose.models.jewellery || mongoose.model('jewellery',jewelSchema)

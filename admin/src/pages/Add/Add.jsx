@@ -16,20 +16,19 @@ const Add = ({ url }) => {
     price: "",
     category: "Rings",
     subcategory: "Gold",
-    size: "defaultSizes[0]",
+    size: "1",
     gender: "Women",
   });
 
   const bangleSizes = ["2-2", "2-4", "2-6", "2-8", "2-10", "2-12"];
   const chainSizes = ["16 inch", "18 inch", "20 inch", "22 inch", "24 inch", "30 inch"];
   const defaultSizes = Array.from({ length: 30 }, (_, i) => (i + 1).toString());
-
   const [sizeOptions, setSizeOptions] = useState(defaultSizes);
 
   useEffect(() => {
     if (existingJewel) {
       setData(existingJewel);
-      setImage(existingJewel.image);
+      setImage(existingJewel.image || ""); // Ensure image is not null
     }
   }, [existingJewel]);
 
@@ -62,7 +61,8 @@ const Add = ({ url }) => {
     formData.append("subcategory", data.subcategory);
     formData.append("gender", data.gender);
     formData.append("size", data.size);
-    if (image && image !== existingJewel.image) {
+    
+    if (image instanceof File || (!existingJewel || image !== existingJewel.image)) {
       formData.append("image", image);
     }
 
@@ -79,6 +79,23 @@ const Add = ({ url }) => {
 
       if (response.data.success) {
         toast.success(response.data.message);
+
+        // Reset form after successful submission
+        setData({
+          name: "",
+          description: "",
+          price: "",
+          category: "Rings",
+          subcategory: "Gold",
+          size: defaultSizes[0],
+          gender: "Women",
+        });
+        setImage(null);
+
+        // Refresh the page to show updated list
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       } else {
         toast.error(response.data.message);
       }
@@ -94,17 +111,20 @@ const Add = ({ url }) => {
           <p>Upload Image</p>
           <label htmlFor="image">
             <img
-              src={image instanceof File ? URL.createObjectURL(image) : image || assets.upload_area}
-              alt=""
+              src={
+                image instanceof File
+                  ? URL.createObjectURL(image)
+                  : image || assets.upload_area // Ensure fallback
+              }
+              alt="Jewellery Preview"
             />
-
           </label>
           <input onChange={(e) => setImage(e.target.files[0])} type="file" id="image" hidden required={!existingJewel} />
         </div>
 
         <div className="add-product-name flex-col">
           <p>Product name</p>
-          <input onChange={onChangeHandler} value={data.name} type="text" name="name" placeholder="Type here" />
+          <input onChange={onChangeHandler} value={data.name} type="text" name="name" placeholder="Type here" required />
         </div>
 
         <div className="add-product-description flex-col">
@@ -157,7 +177,7 @@ const Add = ({ url }) => {
 
           <div className="add-price flex-col">
             <p>Product price</p>
-            <input onChange={onChangeHandler} value={data.price} type="number" name="price" placeholder="Price" />
+            <input onChange={onChangeHandler} value={data.price} type="number" name="price" placeholder="Price" required />
           </div>
         </div>
 
