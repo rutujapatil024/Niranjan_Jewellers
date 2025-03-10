@@ -57,7 +57,6 @@ import parcel_icon from './parcel_icon.png'
 import myorders from './myorders.png'
 import logout from './logout.png'
 
-
 import ring1 from './ring1.jpg'
 import ring2 from './ring2.jpg'
 import ring3 from './ring3.jpg'

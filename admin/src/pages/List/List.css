@@ -13,6 +13,25 @@
 .list-table-format img{
     width: 50px;
 }
+.search-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Aligns items to the right */
+  gap: 10px; /* Space between input and icon */
+  width: 100%;
+  padding: 10px;
+}
+.search-container p {
+  text-align: left; /* Ensures text inside the container aligns left */
+  width: 100%;
+  font-weight: 400;
+}
+.search-input{
+  padding: 5px;
+}
+.search_icon{
+  width: 25px;
+}
 .action-buttons {
     display: flex;
     align-items: center;
