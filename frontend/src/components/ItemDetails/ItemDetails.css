@@ -102,3 +102,15 @@
     color: red;
     margin-top: 50px;
 }
+.size-guide-link {
+    margin-top: 10px;
+}
+
+.size-guide-link a {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.size-guide-link a:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,15 @@
+.imgs {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Adjust space between images */
+    margin: 20px 0; /* Adds space above and below the image container */
+  }
+  
+  .imgs img {
+    max-width: 45%; /* Ensures images fit well */
+    height: auto;
+    border-radius: 5px;
+  }
+  .table{
+    padding: 40px;
+  }

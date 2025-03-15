@@ -9,6 +9,9 @@ const StoreProvider = ({ children }) => {
     const [cart, setCart] = useState([]);
     const [token, setToken] = useState("");
     const [forceUpdate, setForceUpdate] = useState(false);
+    const [activeGender, setActiveGender] = useState("Women"); // Added state for gender
+    const [activeCategory, setActiveCategory] = useState("Rings"); // Added state for gender
+
     //fetch from backend
    // const [product_list,]
 
@@ -147,6 +150,7 @@ const StoreProvider = ({ children }) => {
             value={{
                 product_list,
                 wishlist,
+                setWishlist,  
                 addToWishlist,
                 removeFromWishlist,
                 cart,
@@ -159,6 +163,10 @@ const StoreProvider = ({ children }) => {
                 logout,
                 forceUpdate,
                 getTotalAmount,
+                activeGender, // Provided in context
+                setActiveGender, 
+                activeCategory, // Provided in context
+                setActiveCategory, 
             }}
         >
             {children}

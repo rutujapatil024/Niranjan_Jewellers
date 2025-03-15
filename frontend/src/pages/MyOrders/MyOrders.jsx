@@ -38,7 +38,7 @@ const MyOrders = () => {
                     return item.name+ " x " +item.quantity+", "
                   }
                 })}</p>     
-                <p>${order.amount}.00</p>         
+                <p>Rs.{order.amount}.00</p>         
                 <p>Item: {order.item.length}</p>
                 <button>Track Order</button>
                  

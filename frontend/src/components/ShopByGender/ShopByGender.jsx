@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import { womensJewelry, mensJewelry, kidsJewelry } from "../../assets/assets"; // Ensure correct import
 import "./ShopByGender.css";
+import { Link } from "react-router-dom";
+import { StoreContext } from '../../Context/StoreContext';
+import { useNavigate } from "react-router-dom";
+
 
 const ShopByGender = () => {
   const [activeTab, setActiveTab] = useState("Women");
-
+   const { activeGender,setActiveGender, activecategory,setActiveCategory } = useContext(StoreContext);
+   const navigate = useNavigate();
   // Ensure categories are correctly mapped to imported data
   const categories = {
     Women: womensJewelry,
@@ -21,7 +26,10 @@ const ShopByGender = () => {
           <button
             key={category}
             className={activeTab === category ? "active" : ""}
-            onClick={() => setActiveTab(category)}
+           onClick={()=>{
+            setActiveGender(category)
+             setActiveTab(category)
+           }}
           >
             {category}'s Jewellery
           </button>
@@ -30,7 +38,12 @@ const ShopByGender = () => {
 
       <div className="products">
         {categories[activeTab]?.map((item, index) => (
-          <div className="product-card" key={index}>
+          <div onClick={()=>{
+            console.log(activeTab,item)
+            setActiveCategory(item.name)
+            setActiveGender(activeTab)
+            navigate('/shop-by-gender')
+          }} className="product-card" key={index}>
             <img src={item.image} alt={item.name} className="product-image" />
             <p className="product-name">{item.name}</p>
           </div>

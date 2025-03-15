@@ -1,0 +1,30 @@
+.pic1, .pic2 {
+    display: block;
+    max-width: 25%; /* Adjust the size as needed */
+    height: auto;
+    margin: 20px auto; /* Centers the images and adds spacing */
+}
+.bangle-size-container {
+    display: flex;
+    align-items: flex-start; /* Aligns text and image at the top */
+    gap: 20px; /* Adds space between text and image */
+}
+
+.bangle-text {
+    flex: 1; /* Allows text to take up available space */
+}
+
+.pic2 {
+    max-width: 15%; /* Adjust image size */
+    height: auto;
+    margin-right: 100px;
+}
+ul {
+    list-style-type: disc; /* Options: disc, circle, square, none */
+    padding-left: 20px; /* Adds indentation */
+  }
+  
+  li {
+    margin-bottom: 8px; /* Adds spacing between items */
+  }
+  

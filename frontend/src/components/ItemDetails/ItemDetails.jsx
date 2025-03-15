@@ -28,7 +28,7 @@ const ItemDetails = () => {
     const handleAddToCart = () => {
         if (!token) {
             alert("Please login to add items to cart.");
-           // navigate("/login");  // Redirect to login page if not logged in
+            // navigate("/login");  // Redirect to login page if not logged in
             return;
         }
 
@@ -60,26 +60,36 @@ const ItemDetails = () => {
 
                 <p className="description">{item.description}</p>
                 <p className="price">₹{item.price}</p>
-                
+
                 {/* Size selector if sizes are available */}
                 {item.sizes && Array.isArray(item.sizes) ? (
-    item.sizes.length > 0 ? (
-        <div className="size-selector">
-            <label>Select Size:</label>
-            <select value={selectedSize} onChange={(e) => setSelectedSize(e.target.value)}>
-                <option value="">Choose Size</option>
-                {item.sizes.map((size, index) => (
-                    <option key={index} value={size}>{size}</option>
-                ))}
-            </select>
-        </div>
-    ) : (
-        <p className="error-message">No sizes available for this item.</p>
-    )
-) : (
-    <p className="error-message">Sizes data not found.</p>
-)}
-
+                    item.sizes.length > 0 ? (
+                        <div className="size-selector">
+                            <label>Select Size:</label>
+                            <select value={selectedSize} onChange={(e) => setSelectedSize(e.target.value)}>
+                                <option value="">Choose Size</option>
+                                {item.sizes.map((size, index) => (
+                                    <option key={index} value={size}>{size}</option>
+                                ))}
+                            </select>
+                        </div>
+                    ) : (
+                        <p className="error-message">No sizes available for this item.</p>
+                    )
+                ) : (
+                    <p className="error-message">Sizes data not found.</p>
+                )}
+                {(item.category === "Rings" || item.category === "Bangles") && (
+                    <div className="size-guide-link">
+                        <a
+                            href={item.category === "Rings" ? "/ring-size-guide" : "/bangle-size-guide"}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Click here for {item.category === "Rings" ? "Ring" : "Bangle"} Size Guide
+                        </a>
+                    </div>
+                )}
 
                 <div className="actions">
                     {cartItem ? (

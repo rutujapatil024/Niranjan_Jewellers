@@ -56,6 +56,10 @@ import red_wishlist from './red_wishlist.png'
 import parcel_icon from './parcel_icon.png'
 import myorders from './myorders.png'
 import logout from './logout.png'
+import ring_guide1 from './ring_guide1.jpg'
+import ring_guide2 from './ring_guide2.jpg'
+import banglesize from './banglesize.jpg'
+import banglesize2 from './banglesize2.jpg'
 
 import ring1 from './ring1.jpg'
 import ring2 from './ring2.jpg'
@@ -118,6 +122,7 @@ export const assets ={
     parcel_icon, 
     logout,
     myorders,
+    ring_guide1, ring_guide2,banglesize, banglesize2,
     bracelet, mixed, necklace, platinumring, ganesh,
     Kbracelet,Kearrings,Kgoldring,Kpendant, Wgoldchain, Wpendant,Mgoldchain,Mgoldkada,Mgoldpendant,Mgoldring,
     GW_earring,GW_CHAIN,GW_pendant,GW_ring,GM_ring,GM_kada,GM_bracelet,GM_chain,
@@ -421,14 +426,14 @@ export const womensJewelry = [
     { name: "Rings", image: GW_ring},
     { name: "Earrings", image: GW_earring },
     { name: "Pendants", image: GW_pendant },
-    { name: "Chains", image: GW_CHAIN },
+    { name: "Gold Chain", image: GW_CHAIN },
   ];
   
   export const mensJewelry = [
     { name: "Rings", image: GM_ring},
     { name: "Bracelet", image: GM_bracelet },
     { name: "Kada", image: GM_kada },
-    { name: "Chains", image: GM_chain },
+    { name: "Gold Chain", image: GM_chain },
   ];
   
   export const kidsJewelry = [

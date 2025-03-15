@@ -1,14 +1,14 @@
 import React, { useContext } from 'react';
 import './ShopByGenderDisplay.css';
 import { StoreContext } from '../../Context/StoreContext';
-import Jewelitem from '../Jewelitem/Jewelitem';
 import { useNavigate } from "react-router-dom";
 
 export const ShopByGenderDisplay = () => {
-  const { product_list, activeGender } = useContext(StoreContext);
+  const { product_list, activeGender, activeCategory } = useContext(StoreContext);
+
   const navigate = useNavigate();
 
-  const filteredProducts = product_list.filter((item) => item.gender === activeGender);
+  const filteredProducts = product_list.filter((item) => item.gender === activeGender && item.category===activeCategory);
 
   return (
     <div className='shop-by-gender-display' id='shop-by-gender-display'>
@@ -16,7 +16,7 @@ export const ShopByGenderDisplay = () => {
       <div className="shop-by-gender-display-list">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((item, index) => (
-            <div key={index} className='product-card' onClick={() => navigate(`/item/${item._id}`)}>
+            <div key={index} className='product-card' onClick={() => navigate(`/item-details/${item._id}`)}>
               <div className='product-image-container'>
                 <img src={item.image} alt={item.name} className='product-image'/>
               </div>

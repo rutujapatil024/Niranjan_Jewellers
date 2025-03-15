@@ -41,7 +41,7 @@ const getJewellery = async (req, res) => {
             category: jewel.category,
             subcategory: jewel.subcategory,
             gender: jewel.gender,
-            sizes: jewel.size,
+            sizes: jewel.size || [],
             image: jewel.image?.data
                 ? `data:${jewel.image.contentType};base64,${jewel.image.data.toString('base64')}`
                 : null
