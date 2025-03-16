@@ -1,5 +1,5 @@
 import React from "react";
-import "./AboutUs.css"; // Add styles here
+import "./AboutUs.css"; 
 
 const AboutUs = () => {
   return (
@@ -19,7 +19,6 @@ const AboutUs = () => {
         <li><strong>Silver Jewellery</strong> – Beautifully crafted silver ornaments with intricate detailing.</li>
         <li><strong>Gemstone Jewellery</strong> – Vibrant and unique pieces featuring precious and semi-precious stones.</li>
       </ul>
-
 
       <h3>Our Services</h3>
       <ul className="services-list">

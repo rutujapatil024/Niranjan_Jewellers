@@ -118,3 +118,22 @@
     background-color: darkred;
     color: wheat;
 }
+.click-collect{
+    background-color: wheat;
+    color: darkred;
+    border: none;
+    padding: 10px;
+    font-size: 15px;
+    border-radius: 10px;
+}
+.click-collect:hover{
+    background-color: darkred;
+    color: wheat;
+    cursor: pointer;
+}
+.click-collect-link {
+    font-size: 0.8em; /* Adjust the font size as needed */
+}
+.click-collect-link:hover {
+    text-decoration: underline;
+}

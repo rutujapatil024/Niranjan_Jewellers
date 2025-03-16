@@ -20,7 +20,7 @@ import Categories from './components/Categories/Categories'
 import Collections from './components/Collections/Collections'
 import ShopByGenderDisplay from "./components/ShopByGender/ShopByGenderDisplay";
 import ProductDisplay from './components/ProductDisplay/ProductDisplay'
-
+import ClickandCollect from './components/Footer/ClickandCollect';
 const App = () => {
     const [showLogin, setShowLogin] = useState(false);
     
@@ -44,6 +44,7 @@ const App = () => {
                     <Route path='/shipping-policy' element={<ShippingPolicy/>} />
                     <Route path='/ring-size-guide' element={<RingSize/>} />
                     <Route path='/bangle-size-guide' element={<BangleSize/>} />
+                    <Route path='/click-and-collect' element={<ClickandCollect/>} />
                     <Route path='/faq' element={<FAQ/>} />
                     <Route path='/my-orders' element={<MyOrders/>} />
                     <Route path='/collections' element={<Collections/>} />

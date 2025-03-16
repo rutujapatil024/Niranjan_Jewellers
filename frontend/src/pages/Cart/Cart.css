@@ -140,8 +140,8 @@
     background-color: wheat;
     color: darkred;
     border: none;
-    padding: 15px;
-    font-size: 20px;
+    padding: 10px;
+    font-size: 18px;
     border-radius: 10px;
 }
 .checkout:hover{
@@ -149,6 +149,7 @@
     color: wheat;
     cursor: pointer;
 }
+
 
 @media (max-width: 768px) {
     .cart-items {

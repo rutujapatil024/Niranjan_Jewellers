@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import './placeorder.css';
 import { StoreContext } from '../../Context/StoreContext';
+import { Link } from 'react-router-dom';
 
 const Placeorder = () => {
     const { getTotalAmount } = useContext(StoreContext);
@@ -104,7 +105,11 @@ const Placeorder = () => {
                             <b>Total </b>
                             <b>Rs. {cartAmount === 0 ? 0 : finalAmount.toFixed(2)}</b>
                         </div>
-                        <button className='payment'>PROCEED TO PAYMENT</button>
+                        <button className='payment'>PROCEED TO PAYMENT</button><br/><br/>
+                        <button className='click-collect'>
+                        CLICK & COLLECT
+                        </button> <br/>
+                        <Link to="/click-and-collect" className="click-collect-link">What is Click & Collect?</Link>
                     </div>
                 </div>
             </div>
