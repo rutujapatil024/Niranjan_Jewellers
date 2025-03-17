@@ -1,11 +1,11 @@
 import React, { useContext, useState } from 'react';
 import './placeorder.css';
 import { StoreContext } from '../../Context/StoreContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-const Placeorder = () => {
+const PlaceOrder = () => {
     const { getTotalAmount } = useContext(StoreContext);
-    const cartAmount = getTotalAmount();  
+    const cartAmount = getTotalAmount();
     const makingCharges = cartAmount * 0.10;
     const sgst = cartAmount * 0.015;
     const cgst = cartAmount * 0.015;
@@ -19,6 +19,7 @@ const Placeorder = () => {
         pincode: ''
     });
     const [errors, setErrors] = useState({});
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -58,7 +59,12 @@ const Placeorder = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!validate()) return;
-        alert("Form submitted successfully");
+        navigate('/order-confirmation', {
+            state: {
+                customerName: `${form.firstName} ${form.lastName}`,
+                customerPhone: form.phone
+            }
+        });
     };
 
     return (
@@ -89,7 +95,7 @@ const Placeorder = () => {
 
             <div className="place-order-right">
                 <div className="cart-total">
-                    <h2>Cart Total</h2> <br/> 
+                    <h2>Cart Total</h2> <br />
                     <div>
                         <div className="cart-total-details">
                             <p>Making Charges (10%) : Rs. {cartAmount === 0 ? 0 : makingCharges.toFixed(2)}</p>
@@ -100,14 +106,21 @@ const Placeorder = () => {
                         <div className="cart-total-details">
                             <p>CGST @1.50% : Rs. {cartAmount === 0 ? 0 : cgst.toFixed(2)}</p>
                         </div>
-                        <hr/> <br />
+                        <hr /> <br />
                         <div className="cart-total-details">
                             <b>Total </b>
                             <b>Rs. {cartAmount === 0 ? 0 : finalAmount.toFixed(2)}</b>
                         </div>
-                        <button className='payment'>PROCEED TO PAYMENT</button><br/><br/>
+                        <button className='payment'>
+                            <Link to='/full-payment'> 
+                            PROCEED TO PAYMENT
+                            </Link>
+                            </button><br /><br />
+                            
                         <button className='click-collect'>
-                        CLICK & COLLECT
+                            <Link to="/click-and-collect-payment" >
+                                CLICK & COLLECT
+                            </Link>
                         </button> <br/>
                         <Link to="/click-and-collect" className="click-collect-link">What is Click & Collect?</Link>
                     </div>
@@ -117,4 +130,4 @@ const Placeorder = () => {
     );
 }
 
-export default Placeorder;
+export default PlaceOrder;

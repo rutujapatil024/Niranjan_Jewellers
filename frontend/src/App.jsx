@@ -21,6 +21,11 @@ import Collections from './components/Collections/Collections'
 import ShopByGenderDisplay from "./components/ShopByGender/ShopByGenderDisplay";
 import ProductDisplay from './components/ProductDisplay/ProductDisplay'
 import ClickandCollect from './components/Footer/ClickandCollect';
+import ClickandCollectPayment from './pages/ClickandCollectPayment/ClickandCollectPayment';
+import OrderConfirmation from './pages/ClickandCollectPayment/OrderConfirmation';
+import FullPayment from './pages/FullPayment/FullPayment';
+import FullPaymentConfirmation from './pages/FullPayment/FullPaymentConfirmation';
+
 const App = () => {
     const [showLogin, setShowLogin] = useState(false);
     
@@ -50,6 +55,10 @@ const App = () => {
                     <Route path='/collections' element={<Collections/>} />
                     <Route path="/shop-by-gender" element={<ShopByGenderDisplay />} />
                     <Route path="/products" element={<ProductDisplay product="All" />} />
+                    <Route path="/click-and-collect-payment" element={<ClickandCollectPayment/>} />
+                    <Route path="/order-confirmation" element={<OrderConfirmation/>} />
+                    <Route path="/full-payment" element={<FullPayment/>} />
+                    <Route path="/fullpayment-confirmation" element={<FullPaymentConfirmation/>} />
 
                 </Routes>
             </div>

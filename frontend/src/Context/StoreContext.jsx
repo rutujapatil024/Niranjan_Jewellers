@@ -11,6 +11,7 @@ const StoreProvider = ({ children }) => {
     const [forceUpdate, setForceUpdate] = useState(false);
     const [activeGender, setActiveGender] = useState("Women"); // Added state for gender
     const [activeCategory, setActiveCategory] = useState("Rings"); // Added state for gender
+    
 
     //fetch from backend
    // const [product_list,]
