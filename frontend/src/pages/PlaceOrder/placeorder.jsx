@@ -111,17 +111,35 @@ const PlaceOrder = () => {
                             <b>Total </b>
                             <b>Rs. {cartAmount === 0 ? 0 : finalAmount.toFixed(2)}</b>
                         </div>
-                        <button className='payment'>
-                            <Link to='/full-payment'> 
+                        <button
+                            className='payment'
+                            onClick={(e) => {
+                                if (!validate()) {
+                                    e.preventDefault();
+                                    alert('Please fill out the form before proceeding');
+                                } else {
+                                    navigate('/full-payment');
+                                }
+                            }}
+                        >
                             PROCEED TO PAYMENT
-                            </Link>
-                            </button><br /><br />
-                            
-                        <button className='click-collect'>
-                            <Link to="/click-and-collect-payment" >
-                                CLICK & COLLECT
-                            </Link>
-                        </button> <br/>
+                        </button>
+                        <br /><br />
+
+                        <button
+                            className='click-collect'
+                            onClick={(e) => {
+                                if (!validate()) {
+                                    e.preventDefault();
+                                    alert('Please fill out the form before proceeding');
+                                } else {
+                                    navigate('/click-and-collect-payment');
+                                }
+                            }}
+                        >
+                            CLICK & COLLECT
+                        </button>
+                        <br />
                         <Link to="/click-and-collect" className="click-collect-link">What is Click & Collect?</Link>
                     </div>
                 </div>
