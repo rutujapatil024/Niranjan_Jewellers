@@ -19,17 +19,30 @@ const FullPayment = () => {
     // Handle Full Payment API Submission
     const handlePayment = async () => {
         try {
-            const orderData = {
-                userId: user.id, // Get logged-in user's ID
-                products: cart.map(item => ({
-                    name: item.name,
-                    quantity: item.quantity,
-                    price: item.price,
-                    size: item.size,
-                    image: item.image
-                })),
-                amount: finalAmount,
-                address: {
+            // const orderData = {
+            //     userId: user.id, // Get logged-in user's ID
+            //     products: cart.map(item => ({
+            //         name: item.name,
+            //         quantity: item.quantity,
+            //         price: item.price,
+            //         size: item.size,
+            //         image: item.image
+            //     })),
+            //     amount: finalAmount,
+            //     address: {
+            //         firstName: user.firstName,
+            //         lastName: user.lastName,
+            //         address: user.address,
+            //         city: user.city,
+            //         pincode: user.pincode,
+            //         state: user.state,
+            //         phone: user.phone
+            //     }
+            //};
+                const orderData = new FormData();
+                orderData.append('userId', user.id);
+                orderData.append('amount', finalAmount);
+                orderData.append('address', JSON.stringify({    
                     firstName: user.firstName,
                     lastName: user.lastName,
                     address: user.address,
@@ -37,14 +50,27 @@ const FullPayment = () => {
                     pincode: user.pincode,
                     state: user.state,
                     phone: user.phone
+                }));
+                cart.forEach(item => {
+                    orderData.append('products', JSON.stringify({
+                        name: item.name,
+                        quantity: item.quantity,
+                        price: item.price,
+                        size: item.size,
+                        image: item.image
+                    }));
                 }
-            };
+            );
 
-            const response = await axios.post('http://localhost:3001/api/auth/order/full-payment', orderData);
+            const response = await axios.post('http://localhost:3001/api/auth/order/full-payment', orderData,{
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
 
             if (response.data.success) {
                 toast.success('Payment Successful! Your order has been placed.');
-                clearCart(); // Clear cart after successful order
+                //clearCart(); // Clear cart after successful order
                 navigate('/fullpayment-confirmation');
             } else {
                 toast.error('Error placing order. Please try again.');

@@ -3,7 +3,7 @@ const orderModel = require("../model/orderModel");
 // 📌 1️⃣ Full Payment Order Handler
 const placeFullPaymentOrder = async (req, res) => {
     try {
-        console.log(req.body);
+        console.log(req.body, "req.body");
         const { userId, products, amount, address } = req.body;
 
         const newOrder = new orderModel({

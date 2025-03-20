@@ -19,7 +19,7 @@ router.post('/jewellery/remove', jewellery.removeJewellery);
 router.post('/jewellery/update', upload.single('image'), jewellery.updateJewellery);
 
 // Full Payment Order Route
-router.post("/order/full-payment", orderController.placeFullPaymentOrder);
+router.post("/order/full-payment", upload.none() ,orderController.placeFullPaymentOrder);
 
 // Advance Payment (Click & Collect) Order Route
 router.post("/order/advance-payment", orderController.placeAdvancePaymentOrder);
