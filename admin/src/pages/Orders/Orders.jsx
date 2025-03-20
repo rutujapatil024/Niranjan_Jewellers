@@ -34,9 +34,8 @@ const Orders = ({ url }) => {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      }
-       
-      );
+      });
+
       if (response.data.success) {
         await fetchAllOrders();
       }
@@ -51,7 +50,7 @@ const Orders = ({ url }) => {
 
   return (
     <div className="order-add">
-      <h3>Order Page</h3>
+      <h3>Orders Page</h3>
 
       {/* Check if orders exist */}
       {orders?.length === 0 ? (
@@ -60,7 +59,10 @@ const Orders = ({ url }) => {
         <div className="order-list">
           {orders.map((order, index) => {
             // ✅ Parse address if it's a string
-            const address = typeof order.address === "string" ? JSON.parse(order.address) : order.address;
+            const address =
+              order.address && typeof order.address === "string"
+                ? JSON.parse(order.address)
+                : order.address;
 
             return (
               <div key={index} className="order-item">
@@ -70,39 +72,42 @@ const Orders = ({ url }) => {
                   <p className="order-item-jewel">
                     {order.products.map((itemString, idx) => {
                       // ✅ Parse product string into object
-                      const item = typeof itemString === "string" ? JSON.parse(itemString) : itemString;
+                      const item =
+                        typeof itemString === "string"
+                          ? JSON.parse(itemString)
+                          : itemString;
                       return idx === order.products.length - 1
                         ? `${item.name} X ${item.quantity}`
                         : `${item.name} X ${item.quantity}, `;
                     })}
                   </p>
-                  {
-                    address && (
-                      <div>
-                        <p className="order-item-name">
-                          {address?.firstName + " " + address?.lastName}
+                  {/* ✅ Display customer details only if address is valid */}
+                  {address && (
+                    <div>
+                      <p className="order-item-name">
+                        {address?.firstName + " " + address?.lastName}
+                      </p>
+                      <div className="order-item-address">
+                        <p>{address?.address + ","}</p>
+                        <p>
+                          {address?.city + ", " + address?.pincode + ", " + address?.state}
                         </p>
-                        <div className="order-item-address">
-                          <p>{address?.address + ","}</p>
-                          <p>
-                            {address?.city + ", " + address?.pincode + ", " + address?.state}
-                          </p>
-                        </div>
-                        <p className="order-item-phone">{address?.phone}</p>
                       </div>
-                    )
-                  }
+                      <p className="order-item-phone">{address?.phone}</p>
+                    </div>
+                  )}
                 </div>
                 {/* Order details */}
                 <p>Items: {order.products.length}</p>
-                <p>Rs. {order.amount}</p>
+                <p>Rs. {parseFloat(order.amount).toFixed(2)}</p>
                 <p>Payment Type: {order.paymentType}</p>
                 {order.paymentType === "Advance Payment" && (
                   <>
-                    <p>Advance Paid: Rs. {order.advancePaid}</p>
-                    <p>Remaining Balance: Rs. {order.remainingBalance}</p>
+                    <p>Advance Paid: Rs. {parseFloat(order.advancePaid).toFixed(2)}</p>
+                    <p>Remaining Balance: Rs. {parseFloat(order.remainingBalance).toFixed(2)}</p>
                   </>
                 )}
+
                 {/* Status update dropdown */}
                 <select onChange={(event) => statusHandler(event, order._id)} value={order.status}>
                   <option value="Ordered">Ordered</option>

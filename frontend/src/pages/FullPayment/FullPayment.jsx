@@ -16,63 +16,67 @@ const FullPayment = () => {
     const finalAmount = cartAmount + makingCharges + sgst + cgst;
 
     const navigate = useNavigate();
+    const customerData = JSON.parse(localStorage.getItem('customer')) || {};
+
+if (!customerData.address) {
+    console.error("Address data missing!");
+    alert("Address details are missing. Please go back and fill the form.");
+    navigate('/placeorder');
+}
+
 
     // Handle Full Payment API Submission
-    const handlePayment = async () => {
+    const handlePayment = async (e) => {
+        e.preventDefault();
         try {
-            // const orderData = {
-            //     userId: user.id, // Get logged-in user's ID
-            //     products: cart.map(item => ({
-            //         name: item.name,
-            //         quantity: item.quantity,
-            //         price: item.price,
-            //         size: item.size,
-            //         image: item.image
-            //     })),
-            //     amount: finalAmount,
-            //     address: {
-            //         firstName: user.firstName,
-            //         lastName: user.lastName,
-            //         address: user.address,
-            //         city: user.city,
-            //         pincode: user.pincode,
-            //         state: user.state,
-            //         phone: user.phone
-            //     }
-            //};
-                const orderData = new FormData();
-                orderData.append('userId', user.id);
-                orderData.append('amount', finalAmount);
-                console.log(form, "form");
-                orderData.append('address', JSON.stringify({    
+            const user = JSON.parse(localStorage.getItem('user'));
+            const form = JSON.parse(localStorage.getItem('customer')); // ✅ Ensure form is retrieved
+    
+            if (!form) {
+                toast.error("Address details missing!");
+                return;
+            }
+    
+            const orderData = new FormData();
+            orderData.append('userId', user.id);
+            orderData.append('amount', finalAmount);
+            orderData.append('paymentType', 'Full Payment');
+    
+            // ✅ Ensure address is properly appended
+            orderData.append(
+                'address',
+                JSON.stringify({
                     firstName: form.firstName,
                     lastName: form.lastName,
                     address: form.address,
                     city: form.city,
                     pincode: form.pincode,
                     state: form.state,
-                    phone: form.phone
-                }));
-                cart.forEach(item => {
-                    orderData.append('products', JSON.stringify({
+                    phone: form.phone,
+                })
+            );
+    
+            cart.forEach((item) => {
+                orderData.append(
+                    'products',
+                    JSON.stringify({
                         name: item.name,
                         quantity: item.quantity,
                         price: item.price,
                         size: item.size,
-                        image: item.image
-                    }));
-                }
-            );
-
-            const response = await axios.post('http://localhost:3001/api/auth/order/full-payment', orderData,{
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
+                        image: item.image,
+                    })
+                );
             });
-
+    
+            const response = await axios.post(
+                'http://localhost:3001/api/auth/order/full-payment',
+                orderData,
+                { headers: { 'Content-Type': 'multipart/form-data' } }
+            );
+    
             if (response.data.success) {
                 toast.success('Payment Successful! Your order has been placed.');
-                //clearCart(); // Clear cart after successful order
                 navigate('/fullpayment-confirmation');
             } else {
                 toast.error('Error placing order. Please try again.');
@@ -82,6 +86,7 @@ const FullPayment = () => {
             toast.error('Server error, please try again later.');
         }
     };
+    
 
     return (
         <div className="full-payment">
@@ -93,7 +98,7 @@ const FullPayment = () => {
                 <p><strong>Total Amount:</strong> Rs. {finalAmount.toFixed(2)}</p>
             </div>
             
-            <button className="pay-button" onClick={handlePayment}>
+            <button className="pay-button" onClick={(e) => handlePayment(e)}>
                 Pay Rs. {finalAmount.toFixed(2)}
             </button>
         </div>

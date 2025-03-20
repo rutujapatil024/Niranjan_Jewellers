@@ -24,6 +24,7 @@ const PlaceOrder = () => {
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
+    // ✅ Handle Input Changes
     const handleChange = (e) => {
         const { name, value } = e.target;
 
@@ -38,6 +39,7 @@ const PlaceOrder = () => {
         setForm(prev => ({ ...prev, [name]: value }));
     };
 
+    // ✅ Validate Form Fields
     const validate = () => {
         let newErrors = {};
         if (!/^[A-Za-z]+$/.test(form.firstName.trim())) {
@@ -55,27 +57,42 @@ const PlaceOrder = () => {
         if (!/^\d{6}$/.test(form.pincode)) {
             newErrors.pincode = "Pincode must be exactly 6 digits";
         }
+        if (!form.address.trim()) {
+            newErrors.address = "Address is required";
+        }
+        if (!form.city.trim()) {
+            newErrors.city = "City is required";
+        }
+        if (!form.state.trim()) {
+            newErrors.state = "State is required";
+        }
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e) => {
+    // ✅ Handle Form Submission & Navigation
+    const handleSubmit = (e, paymentType) => {
         e.preventDefault();
         if (!validate()) return;
+
+        console.log("Form Data:", form); // ✅ Debugging to check form values
+
+        // ✅ Store the full address correctly
         localStorage.setItem('customer', JSON.stringify(form));
-        navigate('/order-confirmation', {
-            state: {
-                customerName: `${form.firstName} ${form.lastName}`,
-                customerPhone: form.phone
-            }
-        });
+
+        // ✅ Navigate based on button type
+        if (paymentType === "fullPayment") {
+            navigate('/full-payment');
+        } else if (paymentType === "clickCollect") {
+            navigate('/click-and-collect-payment');
+        }
     };
 
     return (
-        <form className='place-order' onSubmit={handleSubmit}>
+        <form className='place-order' onSubmit={(e) => handleSubmit(e, 'fullPayment')}>
             <div className="place-order-left">
                 <p className='title'>Delivery Information</p>
-                <p>Only deliverable in Thane, Maharashtra </p>
+                <p>Only deliverable in Thane, Maharashtra</p>
                 <div className="multi-fields">
                     <input type='text' name='firstName' placeholder='First name' value={form.firstName} onChange={handleChange} />
                     {errors.firstName && <span className='error' style={{ color: 'darkred' }}>{errors.firstName}</span>}
@@ -87,13 +104,16 @@ const PlaceOrder = () => {
                 <input type='text' name='phone' placeholder='Phone number' value={form.phone} onChange={handleChange} maxLength={10} />
                 {errors.phone && <span className='error' style={{ color: 'darkred' }}>{errors.phone}</span>}
                 <div className="multi-fields">
-                    <input type='text' placeholder='Address' />
-                    <input type='text' placeholder='City' />
+                    <input type='text' name='address' placeholder='Address' value={form.address} onChange={handleChange} />
+                    {errors.address && <span className='error' style={{ color: 'darkred' }}>{errors.address}</span>}
+                    <input type='text' name='city' placeholder='City' value={form.city} onChange={handleChange} />
+                    {errors.city && <span className='error' style={{ color: 'darkred' }}>{errors.city}</span>}
                 </div>
                 <div className="multi-fields">
                     <input type='text' name='pincode' placeholder='Pincode' value={form.pincode} onChange={handleChange} maxLength={6} />
                     {errors.pincode && <span className='error' style={{ color: 'darkred' }}>{errors.pincode}</span>}
-                    <input type='text' placeholder='State' />
+                    <input type='text' name='state' placeholder='State' value={form.state} onChange={handleChange} />
+                    {errors.state && <span className='error' style={{ color: 'darkred' }}>{errors.state}</span>}
                 </div>
             </div>
 
@@ -115,31 +135,19 @@ const PlaceOrder = () => {
                             <b>Total </b>
                             <b>Rs. {cartAmount === 0 ? 0 : finalAmount.toFixed(2)}</b>
                         </div>
+                        {/* ✅ Updated Button Handlers */}
                         <button
+                            type="submit"
                             className='payment'
-                            onClick={(e) => {
-                                if (!validate()) {
-                                    e.preventDefault();
-                                    alert('Please fill out the form before proceeding');
-                                } else {
-                                    navigate('/full-payment');
-                                }
-                            }}
+                            onClick={(e) => handleSubmit(e, 'fullPayment')}
                         >
                             PROCEED TO PAYMENT
                         </button>
                         <br /><br />
-
                         <button
+                            type="button"
                             className='click-collect'
-                            onClick={(e) => {
-                                if (!validate()) {
-                                    e.preventDefault();
-                                    alert('Please fill out the form before proceeding');
-                                } else {
-                                    navigate('/click-and-collect-payment');
-                                }
-                            }}
+                            onClick={(e) => handleSubmit(e, 'clickCollect')}
                         >
                             CLICK & COLLECT
                         </button>

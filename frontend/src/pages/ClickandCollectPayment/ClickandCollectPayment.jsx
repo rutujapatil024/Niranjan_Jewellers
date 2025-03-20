@@ -6,8 +6,16 @@ import axios from "axios"; // ✅ Import axios
 import { toast } from "react-toastify"; // ✅ Import toast
 
 const ClickAndCollectPayment = () => {
-  const { getTotalAmount,  cart } = useContext(StoreContext);
-  const user = JSON.parse(localStorage.getItem('user'));
+  const { getTotalAmount, cart } = useContext(StoreContext);
+  const user = JSON.parse(localStorage.getItem('user')) || {}; // ✅ Ensure user is not null
+  const customerData = JSON.parse(localStorage.getItem('customer')) || {}; // ✅ Ensure address is present
+
+  if (!customerData.address || !customerData.city || !customerData.state) {
+    console.error("Address data missing!", customerData);
+    alert("Address details are missing. Please go back and fill the form.");
+    return navigate('/placeorder');
+  }
+
   // Calculate order amounts
   const cartAmount = getTotalAmount();
   const makingCharges = cartAmount * 0.10;
@@ -21,62 +29,67 @@ const ClickAndCollectPayment = () => {
 
   const navigate = useNavigate();
 
-  const handlePayment = async () => {
+  const handlePayment = async (e) => {
+    e.preventDefault();
     try {
-      const orderData = new FormData();
-
-      // ✅ Add user and order details
-      orderData.append("userId", user.id);
-      orderData.append("amount", finalAmount);
-      orderData.append("paymentType", "Advance Payment");
-      orderData.append("advancePaid", advancePayment);
-      orderData.append("remainingBalance", remainingBalance);
-
-      // ✅ Add address (stringified)
-      orderData.append(
-        "address",
-        JSON.stringify({
-          firstName: user.firstName,
-          lastName: user.lastName,
-          address: user.address,
-          city: user.city,
-          pincode: user.pincode,
-          state: user.state,
-          phone: user.phone,
-        })
-      );
-
-      // ✅ Add products array (stringified)
-      const products = cart.map((item) => ({
-        name: item.name,
-        quantity: item.quantity,
-        price: item.price,
-        size: item.size,
-        image: item.image,
-      }));
-      orderData.append("products", JSON.stringify(products));
-
-      // ✅ Send data to backend
-      const response = await axios.post(
-        "http://localhost:3001/api/auth/order/advance-payment",
-        orderData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+        if (!user.id) {
+            toast.error("User information missing!");
+            return;
         }
-      );
+        
+        if (!customerData) {
+            toast.error("Address details missing!");
+            return;
+        }
 
-      // ✅ Handle response
-      if (response.data.success) {
-        toast.success("Advance Payment Successful! Your order has been placed.");
-        navigate("/order-confirmation"); // Redirect to order confirmation page
-      } else {
-        toast.error("Error placing order. Please try again.");
-      }
+        const orderData = new FormData();
+        orderData.append("userId", user.id);
+        orderData.append("amount", finalAmount);
+        orderData.append("paymentType", "Advance Payment");
+        orderData.append("advancePaid", advancePayment);
+        orderData.append("remainingBalance", remainingBalance);
+
+        // ✅ Append address properly
+        orderData.append(
+            "address",
+            JSON.stringify({
+                firstName: customerData.firstName,
+                lastName: customerData.lastName,
+                address: customerData.address,
+                city: customerData.city,
+                pincode: customerData.pincode,
+                state: customerData.state,
+                phone: customerData.phone,
+            })
+        );
+
+        // ✅ Append products (Fix for undefined JSON error)
+        orderData.append(
+            "products",
+            JSON.stringify(cart.map(item => ({
+                name: item.name,
+                quantity: item.quantity,
+                price: item.price,
+                size: item.size,
+                image: item.image
+            })))
+        );
+
+        const response = await axios.post(
+            "http://localhost:3001/api/auth/order/advance-payment",
+            orderData,
+            { headers: { "Content-Type": "multipart/form-data" } }
+        );
+
+        if (response.data.success) {
+            toast.success("Advance Payment Successful! Your order has been placed.");
+            navigate("/order-confirmation");
+        } else {
+            toast.error("Error placing order. Please try again.");
+        }
     } catch (error) {
-      console.error("Error placing order:", error);
-      toast.error("Server error, please try again later.");
+        console.error("Error placing order:", error);
+        toast.error("Server error, please try again later.");
     }
   };
 
