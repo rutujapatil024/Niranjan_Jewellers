@@ -16,7 +16,10 @@ const PlaceOrder = () => {
         lastName: '',
         email: '',
         phone: '',
-        pincode: ''
+        pincode: '',
+        address: '',
+        city: '',
+        state: ''
     });
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
@@ -59,6 +62,7 @@ const PlaceOrder = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!validate()) return;
+        localStorage.setItem('customer', JSON.stringify(form));
         navigate('/order-confirmation', {
             state: {
                 customerName: `${form.firstName} ${form.lastName}`,

@@ -70,10 +70,37 @@ const getAllOrders = async (req, res) => {
         res.status(500).json({ success: false, message: "Failed to fetch orders", error: error.message });
     }
 };
-
+const updateOrderStatus = async (req, res) => {
+    try {
+      const { orderId, status } = req.body;
+  
+      // ✅ Use Order model correctly
+      const updatedOrder = await orderModel.findByIdAndUpdate(
+        orderId,
+        { status },
+        { new: true }
+      ).populate("userId", "firstName lastName email");
+  
+      if (!updatedOrder) {
+        return res.status(404).json({ success: false, message: "Order not found" });
+      }
+  
+      res.status(200).json({ success: true, order: updatedOrder });
+    } catch (error) {
+      console.error("Error updating order status:", error.message);
+      res.status(500).json({
+        success: false,
+        message: "Failed to update order status",
+        error: error.message,
+      });
+    }
+  };
+  
+  
 module.exports = {
     placeFullPaymentOrder,
     placeAdvancePaymentOrder,
     getUserOrders,
-    getAllOrders
+    getAllOrders,
+    updateOrderStatus
 };

@@ -22,11 +22,13 @@ router.post('/jewellery/update', upload.single('image'), jewellery.updateJewelle
 router.post("/order/full-payment", upload.none() ,orderController.placeFullPaymentOrder);
 
 // Advance Payment (Click & Collect) Order Route
-router.post("/order/advance-payment", orderController.placeAdvancePaymentOrder);
+router.post("/order/advance-payment", upload.none(),orderController.placeAdvancePaymentOrder);
 
 // Get User Orders
 router.post("/order/userorder", orderController.getUserOrders);
 
 router.get("/order/allorders", orderController.getAllOrders);
+
+router.post("/order/update", upload.none(), orderController.updateOrderStatus);
 
 module.exports = router;

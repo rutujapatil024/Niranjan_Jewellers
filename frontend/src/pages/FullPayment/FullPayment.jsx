@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 const FullPayment = () => {
     const { cart, getTotalAmount, clearCart } = useContext(StoreContext);
     const user = JSON.parse(localStorage.getItem('user'));
+    const form = JSON.parse(localStorage.getItem('customer'));
     const cartAmount = getTotalAmount();  
     const makingCharges = cartAmount * 0.10;
     const sgst = cartAmount * 0.015;
@@ -42,14 +43,15 @@ const FullPayment = () => {
                 const orderData = new FormData();
                 orderData.append('userId', user.id);
                 orderData.append('amount', finalAmount);
+                console.log(form, "form");
                 orderData.append('address', JSON.stringify({    
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    address: user.address,
-                    city: user.city,
-                    pincode: user.pincode,
-                    state: user.state,
-                    phone: user.phone
+                    firstName: form.firstName,
+                    lastName: form.lastName,
+                    address: form.address,
+                    city: form.city,
+                    pincode: form.pincode,
+                    state: form.state,
+                    phone: form.phone
                 }));
                 cart.forEach(item => {
                     orderData.append('products', JSON.stringify({
