@@ -74,74 +74,73 @@ const LoginPopup = ({ setShowLogin, setIsAuthenticated, setUser }) => {
     return true;
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  
-  //   if (!validate()) return;
-  
-  //   try {
-  //     const url =
-  //       currState === "Login"
-  //         ? "http://localhost:3001/api/auth/login"
-  //         : "http://127.0.0.1:3001/api/auth/register";
-  
-  //         //GET: to read the data
-  //         //POST: to send the data
-  //         //DELTE to delete the data0
-          
-  //     const response = await axios.post(url, formData, {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-  
-  //     console.log("Server Response:", response.data); // Debugging Step
-  
-  //     if (response.data.success) {
-  //       setToken(response.data.token);
-  //       localStorage.setItem("token", response.data.token); // ✅ Store token in local storage
-  //       localStorage.setItem("user", JSON.stringify(response.data.user)); // ✅ Store user info
-  //       setShowLogin(false);
-  //       alert("Login successful!");
-  //       window.location.reload();
-  //     } else {
-  //       alert(response.data.message);
-  //     }
-  //   } catch (error) {
-  //     console.error("Login Error:", error);
-  //     alert("Error submitting data: " + error);
-  //   }
-  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
   
     if (!validate()) return;
   
-    // Dummy User Data for Login
-    const dummyUser = {
-      id: "67b5e3478da0c541f0d251b5", // Static user ID
-      email: "mana@mail.com",
-      contactNumber: 1111111111, // Use entered contact number
-    };
-  
     try {
-      // Simulate login by storing user info in local storage
-      setToken("sample_token"); // Dummy token
-      localStorage.setItem("token", "sample_token");
-      localStorage.setItem("user", JSON.stringify(dummyUser));
+      const url =
+        currState === "Login"
+          ? "http://localhost:3001/api/auth/login"
+          : "http://127.0.0.1:3001/api/auth/register";
   
-     // setIsAuthenticated(true);
-      setUser(dummyUser);
-      setShowLogin(false);
+          //GET: to read the data
+          //POST: to send the data
+          //DELTE to delete the data0
+          
+      const response = await axios.post(url, formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
   
-      alert("Login Successful!");
-      window.location.reload();
+      console.log("Server Response:", response.data); // Debugging Step
+  
+      if (response.data.success) {
+        setToken(response.data.token);
+        localStorage.setItem("token", response.data.token); // ✅ Store token in local storage
+        localStorage.setItem("user", JSON.stringify(response.data.user)); // ✅ Store user info
+        setShowLogin(false);
+        alert("Login successful!");
+        window.location.reload();
+      } else {
+        alert(response.data.message);
+      }
     } catch (error) {
-      console.error("Dummy Login Error:", error);
-      alert("Error during dummy login.");
+      console.error("Login Error:", error);
+      alert("Error submitting data: " + error);
     }
   };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
   
+  //   if (!validate()) return;
+  
+  //   // Dummy User Data for Login
+  //   const dummyUser = {
+  //     id: "67b5e3478da0c541f0d251b5", // Static user ID
+  //     email: "mana@mail.com",
+  //     contactNumber: 1111111111, // Use entered contact number
+  //   };
+  
+  //   try {
+  //     // Simulate login by storing user info in local storage
+  //     setToken("sample_token"); // Dummy token
+  //     localStorage.setItem("token", "sample_token");
+  //     localStorage.setItem("user", JSON.stringify(dummyUser));
+  
+  //    // setIsAuthenticated(true);
+  //     setUser(dummyUser);
+  //     setShowLogin(false);
+  
+  //     alert("Login Successful!");
+  //     window.location.reload();
+  //   } catch (error) {
+  //     console.error("Dummy Login Error:", error);
+  //     alert("Error during dummy login.");
+  //   }
+  // };
   
 
   return (

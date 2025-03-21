@@ -7,8 +7,7 @@ const port = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors());         // ✅ Enable CORS before routes
-app.use(express.json()); // ✅ Built-in JSON parser
-app.use(express.urlencoded({ extended: true })); // Parses form data
+
 
 // Routes
 app.use('/api/auth', authRoutes);

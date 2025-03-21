@@ -6,7 +6,7 @@ const orderSchema = new mongoose.Schema({
     amount: { type: Number, required: true },
     address: { type: Object, required: true },
     status: { type: String, default: "Order Placed" },
-    date: { type: Date, default: Date.now() },
+    date: { type: Date, default: Date.now },
     payment: { type: Boolean, default: false },
     paymentType: { type: String, enum: ["Full Payment", "Advance Payment"], required: true },
     advancePaid: { type: Number, default: 0 },

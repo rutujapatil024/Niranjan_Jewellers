@@ -11,13 +11,13 @@ const placeFullPaymentOrder = async (req, res) => {
 
     const newOrder = new orderModel({
       userId,
-      products: JSON.parse(products), // ✅ Parse products if sent as a string
+      products,
       amount,
-      address: parsedAddress, // ✅ Correctly assign parsed address
+      address: parsedAddress,
       payment: true, // Full payment is done
       paymentType: "Full Payment",
-      advancePaid: amount, // Paid full amount
-      remainingBalance: 0, // No remaining balance
+      advancePaid: amount,
+      remainingBalance: 0,
     });
 
     await newOrder.save();
@@ -35,11 +35,11 @@ const placeFullPaymentOrder = async (req, res) => {
   }
 };
 
-// 📌 2️⃣ Click & Collect Order Handler (Advance Payment)
+// 📌 2️⃣ Advance Payment Order Handler
 const placeAdvancePaymentOrder = async (req, res) => {
   try {
     const { userId, products, amount, address } = req.body;
-    const advancePaid = amount * 0.50; // 50% of total
+    const advancePaid = amount * 0.50;
     const remainingBalance = amount - advancePaid;
 
     // ✅ Parse address if it's a string
@@ -47,10 +47,10 @@ const placeAdvancePaymentOrder = async (req, res) => {
 
     const newOrder = new orderModel({
       userId,
-      products: JSON.parse(products), // ✅ Parse products if sent as a string
+      products,
       amount,
-      address: parsedAddress, // ✅ Correctly assign parsed address
-      payment: false, // Payment is not fully completed
+      address: parsedAddress,
+      payment: false,
       paymentType: "Advance Payment",
       advancePaid,
       remainingBalance,
@@ -75,7 +75,10 @@ const placeAdvancePaymentOrder = async (req, res) => {
 const getUserOrders = async (req, res) => {
   try {
     const { userId } = req.body;
-    const orders = await orderModel.find({ userId }).sort({ date: -1 });
+    const orders = await orderModel
+      .find({ userId })
+      .populate("products.productId", "name price")
+      .sort({ date: -1 });
 
     res.status(200).json({ success: true, orders });
   } catch (error) {
@@ -90,7 +93,10 @@ const getUserOrders = async (req, res) => {
 // 📌 4️⃣ Get All Orders (Admin Dashboard)
 const getAllOrders = async (req, res) => {
   try {
-    const orders = await orderModel.find({}).sort({ date: -1 });
+    const orders = await orderModel
+      .find({})
+      .populate("products.productId", "name price")
+      .sort({ date: -1 });
 
     res.status(200).json({ success: true, orders });
   } catch (error) {
@@ -107,12 +113,9 @@ const updateOrderStatus = async (req, res) => {
   try {
     const { orderId, status } = req.body;
 
-    // ✅ Use orderModel correctly
-    const updatedOrder = await orderModel.findByIdAndUpdate(
-      orderId,
-      { status },
-      { new: true }
-    ).populate("userId", "firstName lastName email");
+    const updatedOrder = await orderModel
+      .findByIdAndUpdate(orderId, { status }, { new: true })
+      .populate("userId", "firstName lastName email");
 
     if (!updatedOrder) {
       return res.status(404).json({
@@ -123,10 +126,64 @@ const updateOrderStatus = async (req, res) => {
 
     res.status(200).json({ success: true, order: updatedOrder });
   } catch (error) {
-    console.error("Error updating order status:", error.message);
     res.status(500).json({
       success: false,
       message: "Failed to update order status",
+      error: error.message,
+    });
+  }
+};
+
+// 📌 6️⃣ Get Monthly & Yearly Sales Data
+const getSalesData = async (req, res) => {
+  try {
+    const monthlySales = await orderModel.aggregate([
+      {
+        $group: {
+          _id: { month: { $month: "$date" }, year: { $year: "$date" } },
+          amount: { $sum: "$amount" },
+        },
+      },
+      {
+        $sort: { "_id.year": 1, "_id.month": 1 },
+      },
+    ]);
+
+    const formattedData = monthlySales.map((sale) => ({
+      month: `${sale._id.month}/${sale._id.year}`,
+      year: sale._id.year,
+      amount: sale.amount,
+    }));
+
+    res.status(200).json(formattedData);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch sales data",
+      error: error.message,
+    });
+  }
+};
+
+// 📌 7️⃣ Get Pending Payments
+const getPendingPayments = async (req, res) => {
+  try {
+    const pendingPayments = await orderModel.find({ payment: false }).select(
+      "userId amount status"
+    );
+
+    const formattedData = pendingPayments.map((order) => ({
+      orderId: order._id,
+      customerName: order.userId, // Replace with actual name if needed
+      amount: order.amount,
+      status: order.status,
+    }));
+
+    res.status(200).json(formattedData);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch pending payments",
       error: error.message,
     });
   }
@@ -138,4 +195,6 @@ module.exports = {
   getUserOrders,
   getAllOrders,
   updateOrderStatus,
+  getSalesData,
+  getPendingPayments,
 };

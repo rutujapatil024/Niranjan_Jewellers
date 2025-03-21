@@ -14,7 +14,10 @@ const port = 3001;
 
 // app.use(express.json())
 app.use(cors())
+app.use(express.json()); // ✅ Built-in JSON parser
+app.use(express.urlencoded({ extended: true })); // Parses form data
 app.use('/api/auth', routes);
+
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)

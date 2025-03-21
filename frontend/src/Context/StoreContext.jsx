@@ -4,17 +4,13 @@ import axios from "axios";
 export const StoreContext = createContext();
 
 const StoreProvider = ({ children }) => {
-    const [product_list, setProductList] = useState( []);
+    const [product_list, setProductList] = useState([]);
     const [wishlist, setWishlist] = useState([]);
     const [cart, setCart] = useState([]);
     const [token, setToken] = useState("");
     const [forceUpdate, setForceUpdate] = useState(false);
-    const [activeGender, setActiveGender] = useState("Women"); // Added state for gender
-    const [activeCategory, setActiveCategory] = useState("Rings"); // Added state for gender
-    
-
-    //fetch from backend
-   // const [product_list,]
+    const [activeGender, setActiveGender] = useState("Women"); 
+    const [activeCategory, setActiveCategory] = useState("Rings"); 
 
     const url = "http://localhost:3001";
 
@@ -37,8 +33,8 @@ const StoreProvider = ({ children }) => {
         }
     }, [wishlist, cart, token]);
 
-     // Fetch product list from backend once on mount
-     useEffect(() => {
+    // Fetch product list from backend once on mount
+    useEffect(() => {
         const fetchProducts = async () => {
             try {
                 const response = await axios.get(`${url}/api/auth/jewellery`);
@@ -53,6 +49,11 @@ const StoreProvider = ({ children }) => {
         fetchProducts();
     }, []);
 
+    // Clear cart after successful payment
+    const clearCart = () => {
+        setCart([]);
+        localStorage.removeItem("cart");
+    };
 
     // Function to clear wishlist & cart on logout
     const clearCartAndWishlistOnLogout = () => {
@@ -151,7 +152,7 @@ const StoreProvider = ({ children }) => {
             value={{
                 product_list,
                 wishlist,
-                setWishlist,  
+                setWishlist,
                 addToWishlist,
                 removeFromWishlist,
                 cart,
@@ -164,10 +165,11 @@ const StoreProvider = ({ children }) => {
                 logout,
                 forceUpdate,
                 getTotalAmount,
-                activeGender, // Provided in context
-                setActiveGender, 
-                activeCategory, // Provided in context
-                setActiveCategory, 
+                clearCart, // Added clearCart to context
+                activeGender,
+                setActiveGender,
+                activeCategory,
+                setActiveCategory,
             }}
         >
             {children}

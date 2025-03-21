@@ -1,5 +1,9 @@
 .my-orders{
     margin: 50px 0px;
+    padding: 20px;
+}
+.my-orders h2{
+    text-align: center;
 }
 .my-orders .container{
     display: flex;

@@ -17,6 +17,7 @@ const OrderConfirmation = () => {
     const advancePaid = finalAmount * 0.50;
     const remainingBalance = finalAmount - advancePaid;
 
+    
     // Get current date & time
     const currentDate = new Date();
     const formattedDate = currentDate.toLocaleDateString();
@@ -45,9 +46,9 @@ const OrderConfirmation = () => {
         doc.text(`Date: ${formattedDate}`, 20, 50);
         doc.text(`Time: ${formattedTime}`, 20, 58);
 
-        // Customer Details
-        doc.text(`Customer Name: ${customerName || 'N/A'}`, 20, 68);
-        doc.text(`Phone: ${customerPhone || 'N/A'}`, 20, 76);
+        // // Customer Details
+        // doc.text(`Customer Name: ${customerName || 'N/A'}`, 20, 68);
+        // doc.text(`Phone: ${customerPhone || 'N/A'}`, 20, 76);
 
         // Table Header (Soft Gold)
         doc.setFillColor(230, 194, 122); // #e6c27a

@@ -1,6 +1,6 @@
 const express = require("express");
 const loginUsers = require("./module/login");
-const registerUser = require("./module/register");
+const  registerUser = require("./module/register");
 const jewellery = require("./module/jewellery");
 const orderController = require("./module/orderController");
 
@@ -28,5 +28,9 @@ router.post("/order/advance-payment", upload.none(), orderController.placeAdvanc
 router.post("/order/userorder", upload.none(), orderController.getUserOrders);
 router.get("/order/allorders", orderController.getAllOrders);
 router.post("/order/update", upload.none(), orderController.updateOrderStatus);
+
+// ✅ Admin Dashboard Routes
+router.get("/admin/sales", orderController.getSalesData);
+router.get("/admin/pending-payments", orderController.getPendingPayments);
 
 module.exports = router;

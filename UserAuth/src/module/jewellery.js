@@ -54,9 +54,8 @@ const getJewellery = async (req, res) => {
 
 const removeJewellery = async (req, res) => {
   
-
     try {
-        console.log("Received request body:", req.body); // Debugging line
+        console.log("Received request body:", req); // Debugging line
         //console.log("Received body:", req); 
         const { id } = req.body;
     

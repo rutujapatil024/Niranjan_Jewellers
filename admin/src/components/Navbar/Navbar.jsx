@@ -1,11 +1,14 @@
 import React from 'react'
 import './Navbar.css'
 import {assets} from '../../assets/assets'
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
     <div className='navbar'>
-      <img className='logo' src={assets.logo} alt="" /> NIRANJAN JEWELLERS - ADMIN PANEL
+     <Link to="/">
+        <img className="logo" src={assets.logo} alt="Logo" title="Go to Dashboard"/>
+      </Link> NIRANJAN JEWELLERS - ADMIN PANEL
       <img className='profile' src={assets.profile_image} alt="" />
     </div>
   )
