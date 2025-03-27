@@ -32,16 +32,6 @@ const MyOrders = () => {
           order.products = order.products.map((item) =>
             typeof item === "string" ? JSON.parse(item) : item
           );
-  
-          // ✅ Update status if necessary
-          // if (order.paymentType === "Full Payment" && order.status !== "Order Placed") {
-          //   order.status = "Order Placed";
-          // } else if (
-          //   order.paymentType === "Advance Payment" &&
-          //   order.status !== "Advance Paid"
-          // ) {
-          //   order.status = "Advance Paid";
-          // }
           return order;
         });
   

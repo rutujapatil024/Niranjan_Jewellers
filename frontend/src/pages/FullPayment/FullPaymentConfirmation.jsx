@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { jsPDF } from "jspdf";
 import { StoreContext } from "../../Context/StoreContext";
 import { useLocation } from "react-router-dom";
@@ -7,14 +7,37 @@ import "./FullPaymentConfirmation.css";
 const FullPaymentConfirmation = () => {
   const location = useLocation();
   const state = location.state || {};
-  const { firstName, lastName, phone } = state;
   const { cart, getTotalAmount, clearCart } = useContext(StoreContext);
+
+  const [customer, setCustomer] = useState({
+    firstName: "",
+    lastName: "",
+    phone: "",
+    address: "",
+    city: "",
+    pincode: "",
+    state: "",
+  });
 
   const cartAmount = getTotalAmount();
   const makingCharges = cartAmount * 0.1;
   const sgst = cartAmount * 0.015;
   const cgst = cartAmount * 0.015;
   const finalAmount = cartAmount + makingCharges + sgst + cgst;
+
+  // ✅ Get customer data from localStorage or passed state
+  useEffect(() => {
+    const storedCustomer = JSON.parse(localStorage.getItem("customer")) || {};
+    setCustomer({
+      firstName: state.firstName || storedCustomer.firstName || "N/A",
+      lastName: state.lastName || storedCustomer.lastName || "N/A",
+      phone: state.phone || storedCustomer.phone || "N/A",
+      address: storedCustomer.address || "N/A",
+      city: storedCustomer.city || "N/A",
+      pincode: storedCustomer.pincode || "N/A",
+      state: storedCustomer.state || "N/A",
+    });
+  }, [state]);
 
   // Get current date & time
   const currentDate = new Date();
@@ -24,15 +47,17 @@ const FullPaymentConfirmation = () => {
   const handleDownload = () => {
     const doc = new jsPDF();
 
-    // Title and Header
+    // Order Confirmation Title - Rich Gold
     doc.setTextColor(184, 134, 11);
     doc.setFontSize(18);
     doc.text("Order Confirmation", 70, 20);
 
+    // Niranjan Jewellers - Dark Gold
     doc.setTextColor(139, 101, 8);
     doc.setFontSize(15);
     doc.text("Niranjan Jewellers", 20, 30);
 
+    // Store Details (Black)
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(10);
     doc.text(
@@ -41,29 +66,45 @@ const FullPaymentConfirmation = () => {
       40
     );
 
+    // Order Date & Time
     doc.setFontSize(12);
     doc.text(`Date: ${formattedDate}`, 20, 50);
     doc.text(`Time: ${formattedTime}`, 20, 58);
 
-    doc.text(`Customer Name: ${firstName || "N/A"} ${lastName || "N/A"}`, 20, 68);
-    doc.text(`Phone: ${phone || "N/A"}`, 20, 76);
+    // ✅ Customer Details
+    doc.text(
+      `Customer Name: ${customer.firstName} ${customer.lastName}`,
+      20,
+      68
+    );
+    doc.text(`Phone: ${customer.phone}`, 20, 76);
+    doc.text(
+      `Address: ${customer.address}, ${customer.city}, ${customer.state}, ${customer.pincode}`,
+      20,
+      84
+    );
 
-    // Table Headers
-    let y = 90;
-    doc.setFontSize(12);
-    doc.setFont(undefined, "bold");
-    doc.text("Product Name", 20, y);
-    doc.text("Price", 80, y);
-    doc.text("Making Charges", 110, y);
-    doc.text("SGST", 140, y);
-    doc.text("CGST", 165, y);
+    // Table Header (Soft Gold)
+    doc.setFillColor(230, 194, 122); // #e6c27a
+    doc.setTextColor(255, 255, 255);
+    doc.rect(20, 96, 170, 10, "F");
+    doc.text("Product Name", 25, 103);
+    doc.text("Price", 80, 103);
+    doc.text("Making Charges", 110, 103);
+    doc.text("SGST", 140, 103);
+    doc.text("CGST", 165, 103);
 
-    y += 10;
-    doc.setFont(undefined, "normal");
+    doc.setTextColor(0, 0, 0);
 
-    // Table Content
-    cart.forEach((item) => {
-      doc.text(item.name, 20, y);
+    let y = 113;
+    cart.forEach((item, index) => {
+      // Light Golden Alternating Rows
+      if (index % 2 === 0) {
+        doc.setFillColor(249, 241, 220); // #f9f1dc
+        doc.rect(20, y - 7, 170, 10, "F");
+      }
+
+      doc.text(item.name, 25, y);
       doc.text(`Rs. ${item.price.toFixed(2)}`, 80, y);
       doc.text(`Rs. ${(item.price * 0.1).toFixed(2)}`, 110, y);
       doc.text(`Rs. ${(item.price * 0.015).toFixed(2)}`, 140, y);
@@ -71,32 +112,40 @@ const FullPaymentConfirmation = () => {
       y += 10;
     });
 
-    // Total Amount
-    y += 5;
-    doc.setFont(undefined, "bold");
-    doc.text(`Total Amount Paid: Rs. ${finalAmount.toFixed(2)}`, 20, y + 10);
+    // Box Border for Total Amount
+    y += 10;
+    const boxX = 20;
+    const boxWidth = 170;
+    const boxHeight = 20;
+
+    doc.setDrawColor(184, 134, 11); // Gold Border
+    doc.rect(boxX, y - 7, boxWidth, boxHeight);
+
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(12);
+    doc.text(`Total Amount Paid: Rs. ${finalAmount.toFixed(2)}`, boxX + 5, y + 3);
 
     // Shipping Policy Footer
-    y += 20;
+    y += 25;
     doc.setFontSize(10);
-    doc.setFont(undefined, "normal");
     doc.text("Shipping Policy:", 20, y);
-    doc.text("1. Provide accurate recipient details for hassle-free delivery.", 20, y + 5);
+    doc.text("1. Provide accurate recipient details for hassle-free delivery.", 20, y + 7);
     doc.text(
       "2. Accepted ID proofs: Passport, PAN, Driver's License, Voter ID, Aadhar.",
       20,
-      y + 10
+      y + 14
     );
     doc.text(
       "3. Inspect package upon delivery. Report damage within 24 hours.",
       20,
-      y + 15
+      y + 21
     );
-    doc.text("4. Contact: +91 98679 32282 | +91 77180 69999", 20, y + 20);
+    doc.text("4. Contact: +91 98679 32282 | +91 77180 69999", 20, y + 28);
 
     // Save PDF and Clear Cart
     doc.save("FullPayment_Confirmation.pdf");
-    clearCart();
+    clearCart(); // ✅ Clear cart from StoreContext
+    localStorage.removeItem("cart"); // ✅ Clear cart from local storage
   };
 
   return (

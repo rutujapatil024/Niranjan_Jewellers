@@ -61,7 +61,7 @@ const Add = ({ url }) => {
     formData.append("subcategory", data.subcategory);
     formData.append("gender", data.gender);
     formData.append("size", data.size);
-    
+
     if (image instanceof File || (!existingJewel || image !== existingJewel.image)) {
       formData.append("image", image);
     }
@@ -119,7 +119,22 @@ const Add = ({ url }) => {
               alt="Jewellery Preview"
             />
           </label>
-          <input onChange={(e) => setImage(e.target.files[0])} type="file" id="image" hidden required={!existingJewel} />
+          <input
+            onChange={(e) => {
+              const file = e.target.files[0];
+              // ✅ Check if the selected file is an image
+              if (file && file.type.startsWith("image/")) {
+                setImage(file);
+              } else {
+                toast.error("Please upload a valid image file (JPG, PNG, JPEG, GIF)");
+                e.target.value = ""; // Reset input if invalid file
+              }
+            }}
+            type="file"
+            id="image"
+            hidden
+            required={!existingJewel}
+          />
         </div>
 
         <div className="add-product-name flex-col">

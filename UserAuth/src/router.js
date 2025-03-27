@@ -1,6 +1,6 @@
 const express = require("express");
 const loginUsers = require("./module/login");
-const  registerUser = require("./module/register");
+const registerUser = require("./module/register");
 const jewellery = require("./module/jewellery");
 const orderController = require("./module/orderController");
 

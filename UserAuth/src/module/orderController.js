@@ -45,12 +45,15 @@ const placeAdvancePaymentOrder = async (req, res) => {
     // ✅ Parse address if it's a string
     const parsedAddress = typeof address === "string" ? JSON.parse(address) : address;
 
+    // ✅ Parse products if sent as a string
+    const parsedProducts = typeof products === "string" ? JSON.parse(products) : products;
+
     const newOrder = new orderModel({
       userId,
-      products,
+      products: parsedProducts, // ✅ Correctly assign parsed products
       amount,
-      address: parsedAddress,
-      payment: false,
+      address: parsedAddress, // ✅ Correctly assign parsed address
+      payment: false, // Payment is not fully completed
       paymentType: "Advance Payment",
       advancePaid,
       remainingBalance,

@@ -110,7 +110,7 @@ const Dashboard = () => {
     const paymentHeaders = [
       "Order ID",
       "Customer Details",
-      "Amount (Rs)",
+      "Amount",
       "Status",
     ];
     const paymentRows = pendingPayments.map((payment) => [
@@ -166,7 +166,7 @@ const Dashboard = () => {
       </div>
 
       <div className="dashboard-section">
-        <h3>Pending Payments (Advance Payments Only)</h3>
+        <h3>Pending Payments</h3>
         <table>
           <thead>
             <tr>

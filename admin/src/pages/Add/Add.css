@@ -28,12 +28,40 @@
     max-width: 120px;
     border: none;
     padding: 10px;
-    background-color: maroon;
+    background-color: darkred;
     color: white;
     cursor: pointer;
     
 }
 .add-btn:hover {
+    background-color: darkred;
     transform: scale(1.1); 
     transition: transform 0.2s ease-in-out; 
 }
+.add-category-btn {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
+  .add-category-btn input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .add-category-btn button {
+    background-color: darkred;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .add-category-btn button:hover {
+    background-color: darkred;
+    transform: scale(1.1); 
+    transition: transform 0.2s ease-in-out; 
+  }
+  

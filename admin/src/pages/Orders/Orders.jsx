@@ -7,10 +7,12 @@ import { assets } from "../../assets/assets";
 const Orders = ({ url }) => {
   const [orders, setOrders] = useState([]);
 
-  // Fetch all orders from API
+  // ✅ Fetch all orders from API
   const fetchAllOrders = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/api/auth/order/allorders");
+      const response = await axios.get(
+        "http://localhost:3001/api/auth/order/allorders"
+      );
 
       if (response.data.success) {
         setOrders(response.data.orders);
@@ -23,18 +25,22 @@ const Orders = ({ url }) => {
     }
   };
 
-  // Update order status
+  // ✅ Update order status
   const statusHandler = async (event, orderId) => {
     const statusdata = new FormData();
     statusdata.append("orderId", orderId);
     statusdata.append("status", event.target.value);
 
     try {
-      const response = await axios.post("http://localhost:3001/api/auth/order/update", statusdata, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        "http://localhost:3001/api/auth/order/update",
+        statusdata,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       if (response.data.success) {
         await fetchAllOrders();
@@ -52,7 +58,7 @@ const Orders = ({ url }) => {
     <div className="order-add">
       <h3>Orders Page</h3>
 
-      {/* Check if orders exist */}
+      {/* ✅ Check if orders exist */}
       {orders?.length === 0 ? (
         <p className="empty-message">No orders available</p>
       ) : (
@@ -68,7 +74,7 @@ const Orders = ({ url }) => {
               <div key={index} className="order-item">
                 <img src={assets.parcel_icon} alt="Order Icon" />
                 <div>
-                  {/* Display product names and quantities */}
+                  {/* ✅ Display product names and quantities */}
                   <p className="order-item-jewel">
                     {order.products.map((itemString, idx) => {
                       // ✅ Parse product string into object
@@ -81,6 +87,7 @@ const Orders = ({ url }) => {
                         : `${item.name} X ${item.quantity}, `;
                     })}
                   </p>
+
                   {/* ✅ Display customer details only if address is valid */}
                   {address && (
                     <div>
@@ -90,26 +97,50 @@ const Orders = ({ url }) => {
                       <div className="order-item-address">
                         <p>{address?.address + ","}</p>
                         <p>
-                          {address?.city + ", " + address?.pincode + ", " + address?.state}
+                          {address?.city +
+                            ", " +
+                            address?.pincode +
+                            ", " +
+                            address?.state}
                         </p>
                       </div>
                       <p className="order-item-phone">{address?.phone}</p>
                     </div>
                   )}
+
+                  {/* ✅ Order Date Display */}
+                  <p className="order-item-date">
+                    Order Date:{" "}
+                    {new Date(order.date).toLocaleDateString("en-IN", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </p>
                 </div>
-                {/* Order details */}
+
+                {/* ✅ Order Details */}
                 <p>Items: {order.products.length}</p>
                 <p>Rs. {parseFloat(order.amount).toFixed(2)}</p>
                 <p>Payment Type: {order.paymentType}</p>
                 {order.paymentType === "Advance Payment" && (
                   <>
-                    <p>Advance Paid: Rs. {parseFloat(order.advancePaid).toFixed(2)}</p>
-                    <p>Remaining Balance: Rs. {parseFloat(order.remainingBalance).toFixed(2)}</p>
+                    <p>
+                      Advance Paid: Rs.{" "}
+                      {parseFloat(order.advancePaid).toFixed(2)}
+                    </p>
+                    <p>
+                      Remaining Balance: Rs.{" "}
+                      {parseFloat(order.remainingBalance).toFixed(2)}
+                    </p>
                   </>
                 )}
 
-                {/* Status update dropdown */}
-                <select onChange={(event) => statusHandler(event, order._id)} value={order.status}>
+                {/* ✅ Status Update Dropdown */}
+                <select
+                  onChange={(event) => statusHandler(event, order._id)}
+                  value={order.status}
+                >
                   <option value="Ordered">Ordered</option>
                   <option value="Shipped">Shipped</option>
                   <option value="Out for delivery">Out for delivery</option>
