@@ -5,7 +5,6 @@ import axios from "axios";
 import { StoreContext } from "../../Context/StoreContext";
 import { Link } from "react-router-dom";
 
-
 const LoginPopup = ({ setShowLogin, setIsAuthenticated, setUser }) => {
   const { url, setToken } = useContext(StoreContext);
   const [currState, setCurrState] = useState("Login"); // "Login" or "Sign Up"
@@ -22,12 +21,11 @@ const LoginPopup = ({ setShowLogin, setIsAuthenticated, setUser }) => {
     const { name, value } = e.target;
 
     if ((name === "firstName" || name === "lastName") && /[0-9]/.test(value)) {
-        return; // Don't update state if numeric value is found
+      return; // Don't update state if numeric value is found
     }
 
     setFormData({ ...formData, [name]: value });
-};
-
+  };
 
   const handleNumericInput = (e) => {
     if (/^\d*$/.test(e.target.value)) {
@@ -74,36 +72,35 @@ const LoginPopup = ({ setShowLogin, setIsAuthenticated, setUser }) => {
     return true;
   };
 
+  const handleLoginSuccess = (userToken, user) => {
+    setToken(userToken);
+    localStorage.setItem("token", userToken);
+    localStorage.setItem("user", JSON.stringify(user));
+    setShowLogin(false);
+    window.location.href = "/"; // ✅ Redirect after login
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!validate()) return;
-  
+
     try {
       const url =
         currState === "Login"
           ? "http://localhost:3001/api/auth/login"
           : "http://127.0.0.1:3001/api/auth/register";
-  
-          //GET: to read the data
-          //POST: to send the data
-          //DELTE to delete the data0
-          
+
       const response = await axios.post(url, formData, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-  
+
       console.log("Server Response:", response.data); // Debugging Step
-  
+
       if (response.data.success) {
-        setToken(response.data.token);
-        localStorage.setItem("token", response.data.token); // ✅ Store token in local storage
-        localStorage.setItem("user", JSON.stringify(response.data.user)); // ✅ Store user info
-        setShowLogin(false);
-        alert("Login successful!");
-        window.location.reload();
+        handleLoginSuccess(response.data.token, response.data.user);
       } else {
         alert(response.data.message);
       }
@@ -112,36 +109,6 @@ const LoginPopup = ({ setShowLogin, setIsAuthenticated, setUser }) => {
       alert("Error submitting data: " + error);
     }
   };
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  
-  //   if (!validate()) return;
-  
-  //   // Dummy User Data for Login
-  //   const dummyUser = {
-  //     id: "67b5e3478da0c541f0d251b5", // Static user ID
-  //     email: "mana@mail.com",
-  //     contactNumber: 1111111111, // Use entered contact number
-  //   };
-  
-  //   try {
-  //     // Simulate login by storing user info in local storage
-  //     setToken("sample_token"); // Dummy token
-  //     localStorage.setItem("token", "sample_token");
-  //     localStorage.setItem("user", JSON.stringify(dummyUser));
-  
-  //    // setIsAuthenticated(true);
-  //     setUser(dummyUser);
-  //     setShowLogin(false);
-  
-  //     alert("Login Successful!");
-  //     window.location.reload();
-  //   } catch (error) {
-  //     console.error("Dummy Login Error:", error);
-  //     alert("Error during dummy login.");
-  //   }
-  // };
-  
 
   return (
     <div className="login-popup">
@@ -233,15 +200,18 @@ const LoginPopup = ({ setShowLogin, setIsAuthenticated, setUser }) => {
           )}
         </div>
         {currState === "Sign Up" && (
-         <div className="login-popup-condition">
-         <input type="checkbox" required /> By continuing, I agree to the
-         terms of use &{" "}
-         <Link to="/privacy-policy" className="privacy-link" onClick={() => setShowLogin(false)}>
-           Privacy Policy
-         </Link>.
-       </div>
-       
-       
+          <div className="login-popup-condition">
+            <input type="checkbox" required /> By continuing, I agree to the
+            terms of use &{" "}
+            <Link
+              to="/privacy-policy"
+              className="privacy-link"
+              onClick={() => setShowLogin(false)}
+            >
+              Privacy Policy
+            </Link>
+            .
+          </div>
         )}
         <button type="submit">
           {currState === "Sign Up" ? "Create Account" : "Login"}

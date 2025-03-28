@@ -9,8 +9,9 @@ const StoreProvider = ({ children }) => {
     const [cart, setCart] = useState([]);
     const [token, setToken] = useState("");
     const [forceUpdate, setForceUpdate] = useState(false);
-    const [activeGender, setActiveGender] = useState("Women"); 
-    const [activeCategory, setActiveCategory] = useState("Rings"); 
+    const [activeGender, setActiveGender] = useState("Women");
+    const [activeCategory, setActiveCategory] = useState("Rings");
+    const [userDetails, setUserDetails] = useState(null);
 
     const url = "http://localhost:3001";
 
@@ -33,7 +34,7 @@ const StoreProvider = ({ children }) => {
         }
     }, [wishlist, cart, token]);
 
-    // Fetch product list from backend once on mount
+    // ✅ Fetch product list once on mount
     useEffect(() => {
         const fetchProducts = async () => {
             try {
@@ -49,18 +50,52 @@ const StoreProvider = ({ children }) => {
         fetchProducts();
     }, []);
 
-    // Clear cart after successful payment
+    // ✅ Fetch user profile on mount if token exists
+    const fetchUserProfile = async () => {
+        if (!token) return;
+
+        try {
+            const response = await axios.get(`${url}/api/auth/user/profile`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            if (response.status === 200) {
+                setUserDetails(response.data);
+            }
+        } catch (error) {
+            console.error("Error fetching user profile:", error);
+        }
+    };
+
+    useEffect(() => {
+        if (token) {
+            fetchUserProfile(); // Fetch user details on token change
+        }
+    }, [token]);
+
+    // ✅ Clear cart after successful payment
     const clearCart = () => {
         setCart([]);
         localStorage.removeItem("cart");
     };
 
-    // Function to clear wishlist & cart on logout
+    // ✅ Clear cart & wishlist on logout
     const clearCartAndWishlistOnLogout = () => {
         setWishlist([]);
         setCart([]);
         localStorage.removeItem("wishlist");
         localStorage.removeItem("cart");
+    };
+
+    // ✅ Logout & clear session
+    const logout = () => {
+        setToken("");
+        setUserDetails(null);
+        clearCartAndWishlistOnLogout();
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        setForceUpdate((prev) => !prev);
+        window.location.href = "/"; // Redirect to homepage after logout
     };
 
     const addToWishlist = (item) => {
@@ -134,13 +169,7 @@ const StoreProvider = ({ children }) => {
         });
     };
 
-    const logout = () => {
-        setToken("");
-        clearCartAndWishlistOnLogout();
-        localStorage.removeItem("token");
-        setForceUpdate((prev) => !prev);
-    };
-
+    // ✅ Get total amount for the cart
     const getTotalAmount = () => {
         return cart.reduce((total, item) => {
             return total + item.price * item.quantity;
@@ -165,11 +194,13 @@ const StoreProvider = ({ children }) => {
                 logout,
                 forceUpdate,
                 getTotalAmount,
-                clearCart, // Added clearCart to context
+                clearCart,
                 activeGender,
                 setActiveGender,
                 activeCategory,
                 setActiveCategory,
+                userDetails, // ✅ Added user details to context
+                fetchUserProfile, // ✅ Allow profile re-fetching
             }}
         >
             {children}

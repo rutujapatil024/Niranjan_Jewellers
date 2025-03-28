@@ -7,22 +7,20 @@ import { useNavigate } from 'react-router-dom';
 
 const Navbar = ({ setShowLogin }) => {
   const [activeNavbar, setActiveNavbar] = useState("Navbar");
-  //const { getTotalCartAmount } = useContext(StoreContext);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
+  const { cart } = useContext(StoreContext); // ✅ Destructure cart
   const navigate = useNavigate();
+
   const logout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("user"); // Remove user info
-    setUser(null); // Clear user state
-    setIsAuthenticated(false); // Update authentication state
-    navigate("/"); // Redirect to home page
-    setTimeout(() => window.location.reload(), 100); // ✅ Force page reload
+    localStorage.removeItem("user");
+    setUser(null);
+    setIsAuthenticated(false);
+    navigate("/");
+    setTimeout(() => window.location.reload(), 100);
   };
 
-
-
-  // Check if the user is already logged in
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -52,7 +50,6 @@ const Navbar = ({ setShowLogin }) => {
         <a href="#footer" onClick={() => setActiveNavbar("Contact us")} className={activeNavbar === "Contact us" ? "active" : ""}>
           Contact us
         </a>
-
       </ul>
 
       <div className="navbar-right">
@@ -61,10 +58,20 @@ const Navbar = ({ setShowLogin }) => {
             <>
               <img src={assets.profile} alt="Profile" className="profile-icon" />
               <ul className='nav-profile-dropdown'>
-                <Link to="/my-orders">
-                  <img src={assets.myorders} alt="" /><p>My Orders</p></Link>
+                <Link to="/my-profile">
+                  <img src={assets.profile} alt="Profile" />
+                  <p>My Profile</p>
+                </Link>
                 <hr />
-                <li onClick={logout}><img src={assets.logout} alt="" /><p>Logout</p></li>
+                <Link to="/my-orders">
+                  <img src={assets.myorders} alt="" />
+                  <p>My Orders</p>
+                </Link>
+                <hr />
+                <li onClick={logout}>
+                  <img src={assets.logout} alt="" />
+                  <p>Logout</p>
+                </li>
               </ul>
             </>
           ) : (
@@ -78,11 +85,11 @@ const Navbar = ({ setShowLogin }) => {
             <img src={assets.wishlist} alt="Wishlist" />
           </Link>
           <div className="navbar-cart-icon">
-            <Link to="/cart">
-              <img src={assets.cart} alt="Cart" />
-              <span className="dot"></span>
-            </Link>
-          </div>
+  <Link to="/cart">
+    <img src={assets.cart} alt="Cart" />
+    {cart.length > 0 && <span className="cart-count">{cart.length}</span>} {/* Show count here */}
+  </Link>
+</div>
         </div>
       </div>
     </div>

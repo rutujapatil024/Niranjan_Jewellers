@@ -35,6 +35,7 @@
 }
 
 .item-title {
+    
     font-size: 26px;
     color: maroon;
     font-weight: bold;
@@ -85,7 +86,11 @@
     cursor: pointer;
     font-size: 16px;
 }
+h2{
+    gap: 10px;
+    margin-top: 10px;   
 
+}
 .wishlist-icon {
     width: 25px;
     cursor: pointer;

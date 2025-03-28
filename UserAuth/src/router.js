@@ -33,4 +33,10 @@ router.post("/order/update", upload.none(), orderController.updateOrderStatus);
 router.get("/admin/sales", orderController.getSalesData);
 router.get("/admin/pending-payments", orderController.getPendingPayments);
 
+const getUserProfile = require("./module/getUserProfile");
+
+// ✅ User Profile Route
+router.get("/auth/user/profile",getUserProfile);
+
+
 module.exports = router;

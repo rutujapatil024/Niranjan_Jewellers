@@ -29,13 +29,6 @@ const userSchema = new mongoose.Schema({
 
 userSchema.plugin(any)
 
-
-// userSchema.pre('save', async function (next) {
-//   if (!this.isModified('password')) return next();
-//   this.password = await bcrypt.hash(this.password, 10);
-//   next();
-// }); 
-
 userSchema.methods.matchPassword = function (password) {
   return password == this.password
 };
