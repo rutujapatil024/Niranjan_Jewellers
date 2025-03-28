@@ -23,9 +23,9 @@ const MyOrders = () => {
         { userId: user.id },
         { headers: { token } }
       );
-  
+
       console.log("API response:", response.data);
-  
+
       if (response.data.success) {
         const updatedOrders = response.data.orders.map((order) => {
           // ✅ Parse products correctly
@@ -34,7 +34,7 @@ const MyOrders = () => {
           );
           return order;
         });
-  
+
         setOrders(updatedOrders);
       } else {
         console.error("Error fetching orders:", response.data.message);
@@ -50,6 +50,27 @@ const MyOrders = () => {
       fetchOrders();
     }
   }, [token, user.id]);
+
+  // ✅ Format date helper function
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  // ✅ Get expected delivery date (+10 days)
+  const getExpectedDeliveryDate = (dateString) => {
+    const date = new Date(dateString);
+    date.setDate(date.getDate() + 10);
+    return date.toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  };
 
   return (
     <div className="my-orders">
@@ -77,6 +98,16 @@ const MyOrders = () => {
                 </p>
                 <p>
                   <strong>Status:</strong> {order.status}
+                </p>
+                <p>
+                  <strong>Payment Type:</strong> <br/>{order.paymentType}
+                </p>
+                <p>
+                  <strong>Order Placed on: </strong>
+                  {formatDate(order.date)}
+                  <br />
+                  <strong>Expected Delivery on: </strong>
+                  {getExpectedDeliveryDate(order.date)}
                 </p>
               </div>
             );

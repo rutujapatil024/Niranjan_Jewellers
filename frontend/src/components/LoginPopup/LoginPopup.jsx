@@ -16,6 +16,7 @@ const LoginPopup = ({ setShowLogin, setIsAuthenticated, setUser }) => {
     password: "",
     confirmPassword: "",
   });
+  const [errorMessage, setErrorMessage] = useState(""); // ✅ State for Error Message
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,39 +37,40 @@ const LoginPopup = ({ setShowLogin, setIsAuthenticated, setUser }) => {
   const validate = () => {
     if (currState === "Sign Up") {
       if (!/^[A-Za-z]+$/.test(formData.firstName.trim())) {
-        alert("Enter valid First name");
+        setErrorMessage("Enter a valid First name");
         return false;
       }
       if (!/^[A-Za-z]+$/.test(formData.lastName.trim())) {
-        alert("Enter valid Last name");
+        setErrorMessage("Enter a valid Last name");
         return false;
       }
       if (!/^\d{10}$/.test(formData.contactNumber)) {
-        alert("Enter valid contact number");
+        setErrorMessage("Enter a valid contact number");
         return false;
       }
       if (!formData.email.trim() || !/\S+@\S+\.\S+/.test(formData.email)) {
-        alert("Invalid email address");
+        setErrorMessage("Invalid email address");
         return false;
       }
       if (formData.password.length < 8) {
-        alert("Password must be at least 8 characters");
+        setErrorMessage("Password must be at least 8 characters");
         return false;
       }
       if (formData.password !== formData.confirmPassword) {
-        alert("Passwords do not match");
+        setErrorMessage("Passwords do not match");
         return false;
       }
     } else if (currState === "Login") {
       if (!/^\d{10}$/.test(formData.contactNumber)) {
-        alert("Contact number must be exactly 10 digits");
+        setErrorMessage("Contact number must be exactly 10 digits");
         return false;
       }
       if (formData.password.length < 8) {
-        alert("Password must be at least 8 characters");
+        setErrorMessage("Password must be at least 8 characters");
         return false;
       }
     }
+    setErrorMessage(""); // ✅ Clear error if validation passes
     return true;
   };
 
@@ -102,11 +104,11 @@ const LoginPopup = ({ setShowLogin, setIsAuthenticated, setUser }) => {
       if (response.data.success) {
         handleLoginSuccess(response.data.token, response.data.user);
       } else {
-        alert(response.data.message);
+        setErrorMessage(response.data.message || "Login/Sign up failed");
       }
     } catch (error) {
       console.error("Login Error:", error);
-      alert("Error submitting data: " + error);
+      setErrorMessage( (error.response?.data?.message || error.message));
     }
   };
 
@@ -121,6 +123,14 @@ const LoginPopup = ({ setShowLogin, setIsAuthenticated, setUser }) => {
             alt="Close"
           />
         </div>
+
+        {/* ✅ Error message block */}
+        {errorMessage && (
+          <div className="error-alert">
+            <p>{errorMessage}</p>
+          </div>
+        )}
+
         <div className="login-popup-inputs">
           {currState === "Sign Up" && (
             <>

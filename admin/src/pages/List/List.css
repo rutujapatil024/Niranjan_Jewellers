@@ -46,12 +46,11 @@
 
 .search-input {
   padding: 5px;
-  width: 250px; /* ✅ Increased width for search */
+  width: 200px; /* ✅ Increased width for search */
 }
 
 .search_icon {
   width: 25px;
-  cursor: pointer;
 }
 
 .action-buttons {
@@ -68,7 +67,7 @@
 
 .update-btn {
   padding: 2px 6px;
-  font-size: 12px;
+  font-size: 14px;
   background-color: wheat;
   color: darkred;
   border: none;

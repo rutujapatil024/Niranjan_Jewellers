@@ -1,31 +1,31 @@
-const user = require("../model/user");
-const User = require("../model/user")
+const User = require("../model/user");
 
+const loginUsers = async (req, res) => {
+  const { contactNumber, password } = req.body;
 
-const loginUsers = async (req,res) => {
+  try {
+    const user = await User.findOne({ contactNumber });
 
-    const { contactNumber, password } = req.body;
-    
-    const userExists = await User.exists({ contactNumber })
-
-    if (!userExists) {
-      return res.status(400).json({ message: 'User does not exists' });
+    if (!user) {
+      return res.status(400).json({ success: false, message: "User does not exist" });
     }
 
-    const user = await User.findOne({ contactNumber });
-    const succ = user.matchPassword(password); 
-    if (succ) {
-        return res.json({
-          success: true, // ✅ Ensure success is included
-          message: "Login successful",
-          token: "sample_token", // Replace with JWT if using
-          user: { id: user._id, contactNumber: user.contactNumber, email: user.email }, // ✅ Ensure user object is sent
-        });
-      }
-      
-    console.log("Received Data:", req.body);
+    const isPasswordMatch = await user.matchPassword(password);
 
+    if (!isPasswordMatch) {
+      return res.status(400).json({ success: false, message: "Incorrect password" });
+    }
 
-}
+    res.json({
+      success: true,
+      message: "Login successful",
+      token: "sample_token", // Replace with JWT token if used
+      user: { id: user._id, contactNumber: user.contactNumber, email: user.email },
+    });
+  } catch (error) {
+    console.error("Login Error:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
 
 module.exports = loginUsers;

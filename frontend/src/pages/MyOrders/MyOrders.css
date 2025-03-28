@@ -13,9 +13,9 @@
 }
 .my-orders-order{
     display: grid;
-    grid-template-columns: 0.5fr 2fr 1fr 1fr 2fr 1fr;
+    grid-template-columns: 0.5fr 2fr 2fr 0.8fr 2fr 1.5fr 3fr;
     align-items: center;
-    gap: 30px;
+    gap: 20px;
     font-size: 14px;
     padding: 10px 20px;
     color: #454545;
