@@ -7,3 +7,48 @@
 .logo{
     width: 75px;
 }
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 40px;
+    color: #fff;
+  }
+  
+  .logo {
+    width: 70px;
+    cursor: pointer;
+  }
+  
+  .profile-container {
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .profile img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  .logout-dropdown {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background-color: #fff;
+    color: #333;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .logout-dropdown:hover {
+    background-color: #f1f1f1;
+  }
+  .navbar p{
+    color: black;
+  }
+  
