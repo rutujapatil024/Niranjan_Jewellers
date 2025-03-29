@@ -36,7 +36,7 @@ router.get("/admin/pending-payments", orderController.getPendingPayments);
 const getUserProfile = require("./module/getUserProfile");
 
 // ✅ User Profile Route
-router.get("/auth/user/profile",getUserProfile);
+router.get("/user/profile",getUserProfile);
 
 
 module.exports = router;

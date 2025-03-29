@@ -31,7 +31,8 @@ const Add = ({ url }) => {
       setImage(existingJewel.image || ""); // Ensure image is not null
     }
   }, [existingJewel]);
-
+  
+//Update size options based on category
   useEffect(() => {
     if (data.category === "Bangles") {
       setSizeOptions(bangleSizes);
