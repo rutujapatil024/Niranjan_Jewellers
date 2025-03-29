@@ -1,4 +1,5 @@
 const User = require("../model/user");
+const { generateTokens } = require("../tokens/authTokens");
 
 const loginUsers = async (req, res) => {
   const { contactNumber, password } = req.body;
@@ -16,10 +17,11 @@ const loginUsers = async (req, res) => {
       return res.status(400).json({ success: false, message: "Incorrect password" });
     }
 
+    const token = generateTokens(user._id);
     res.json({
       success: true,
       message: "Login successful",
-      token: "sample_token", // Replace with JWT token if used
+      token: token,
       user: { id: user._id, contactNumber: user.contactNumber, email: user.email },
     });
   } catch (error) {

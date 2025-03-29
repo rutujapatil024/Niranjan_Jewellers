@@ -2,9 +2,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import "./MyProfile.css";
 import { StoreContext } from "../../Context/StoreContext";
+import axios from "axios";
 
 const MyProfile = () => {
-  const { token, url } = useContext(StoreContext);
+  const { token, url, setToken } = useContext(StoreContext);
 
   const [user, setUser] = useState({
     firstName: "",
@@ -22,21 +23,23 @@ const MyProfile = () => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/auth/user/profile`, {
-          method: "GET",
+        const response = await axios.get(`${url}/api/auth/user/profile`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data);
-          setNewAddress(data.address || "");
-        } else {
-          console.error("Failed to fetch user profile.");
+        
+        if (response.data) {
+          setUser(response.data);
+          setNewAddress(response.data.address || "");
         }
       } catch (error) {
         console.error("Error fetching profile:", error);
+        if (error.response?.status === 401) {
+          // Token might be invalid or expired
+          localStorage.removeItem("token");
+          setToken("");
+        }
       } finally {
         setLoading(false);
       }
