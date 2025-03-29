@@ -32,4 +32,76 @@ const registerUser = async (req, res) => {
   }
 };
 
-module.exports = registerUser;
+// Update user profile
+const updateUser = async (req, res) => {
+  try {
+    const { firstName, lastName, email } = req.body;
+    const userId = req.user.id; // From auth middleware
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    // Update fields if provided
+    if (firstName) user.firstName = firstName;
+    if (lastName) user.lastName = lastName;
+    if (email) user.email = email;
+
+    await user.save();
+
+    res.json({
+      success: true,
+      message: "User profile updated successfully",
+      user: {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        contactNumber: user.contactNumber
+      }
+    });
+  } catch (error) {
+    console.error("Update user error:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+// Update user address
+const updateAddress = async (req, res) => {
+  try {
+    const { address } = req.body;
+    const userId = req.user.id; // From auth middleware
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    // Update address
+    user.address = {
+      street: address.street,
+      city: address.city,
+      state: address.state,
+      pincode: address.pincode
+    };
+
+    await user.save();
+
+    res.json({
+      success: true,
+      message: "Address updated successfully",
+      user: {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        contactNumber: user.contactNumber,
+        address: user.address
+      }
+    });
+  } catch (error) {
+    console.error("Update address error:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+module.exports = { registerUser, updateUser, updateAddress };
