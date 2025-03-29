@@ -12,11 +12,21 @@ const MyProfile = () => {
     lastName: "",
     contactNumber: "",
     email: "",
-    address: "",
+    address: {
+      street: "",
+      city: "",
+      state: "",
+      pincode: ""
+    }
   });
 
   const [isEditing, setIsEditing] = useState(false);
-  const [newAddress, setNewAddress] = useState("");
+  const [newAddress, setNewAddress] = useState({
+    street: "",
+    city: "",
+    state: "",
+    pincode: ""
+  });
   const [loading, setLoading] = useState(true);
 
   // ✅ Fetch user profile on component mount
@@ -31,12 +41,16 @@ const MyProfile = () => {
         
         if (response.data) {
           setUser(response.data);
-          setNewAddress(response.data.address || "");
+          setNewAddress(response.data.address || {
+            street: "",
+            city: "",
+            state: "",
+            pincode: ""
+          });
         }
       } catch (error) {
         console.error("Error fetching profile:", error);
         if (error.response?.status === 401) {
-          // Token might be invalid or expired
           localStorage.removeItem("token");
           setToken("");
         }
@@ -55,25 +69,40 @@ const MyProfile = () => {
   // ✅ Update address
   const handleUpdateAddress = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/api/user/update-address`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ address: newAddress }),
-      });
+      const response = await axios.put(
+        `${url}/api/auth/user/update-address`,
+        { address: newAddress },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
 
-      if (response.ok) {
-        alert("Address updated successfully!");
-        setUser({ ...user, address: newAddress });
+      if (response.data.success) {
+        setUser(prev => ({
+          ...prev,
+          address: newAddress
+        }));
         setIsEditing(false);
+        alert("Address updated successfully!");
       } else {
         alert("Failed to update address.");
       }
     } catch (error) {
       console.error("Error updating address:", error);
+      alert("Failed to update address.");
     }
+  };
+
+  // ✅ Handle address input changes
+  const handleAddressChange = (e) => {
+    const { name, value } = e.target;
+    setNewAddress(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   // ✅ Handle loading state
@@ -106,36 +135,67 @@ const MyProfile = () => {
         <div className="profile-item">
           <strong>Email:</strong> <span>{user.email}</span>
         </div>
-        <div className="profile-item">
-          <strong>Address:</strong>{" "}
+        <div className="profile-section">
+          <h3>Address</h3>
           {isEditing ? (
-            <input
-              type="text"
-              value={newAddress}
-              onChange={(e) => setNewAddress(e.target.value)}
-              className="address-input"
-            />
+            <div className="address-form">
+              <input
+                type="text"
+                name="street"
+                placeholder="Street Address"
+                value={newAddress.street}
+                onChange={handleAddressChange}
+                className="address-input"
+              />
+              <input
+                type="text"
+                name="city"
+                placeholder="City"
+                value={newAddress.city}
+                onChange={handleAddressChange}
+                className="address-input"
+              />
+              <input
+                type="text"
+                name="state"
+                placeholder="State"
+                value={newAddress.state}
+                onChange={handleAddressChange}
+                className="address-input"
+              />
+              <input
+                type="text"
+                name="pincode"
+                placeholder="Pincode"
+                value={newAddress.pincode}
+                onChange={handleAddressChange}
+                className="address-input"
+              />
+              <div className="profile-actions">
+                <button className="save-btn" onClick={handleUpdateAddress}>
+                  Save Address
+                </button>
+                <button className="cancel-btn" onClick={() => setIsEditing(false)}>
+                  Cancel
+                </button>
+              </div>
+            </div>
           ) : (
-            <span>{user.address || "No address provided"}</span>
-          )}
-        </div>
-        <div className="profile-actions">
-          {isEditing ? (
-            <>
-              <button className="save-btn" onClick={handleUpdateAddress}>
-                Save Address
+            <div className="address-display">
+              {user.address ? (
+                <>
+                  <p><strong>Street:</strong> {user.address.street}</p>
+                  <p><strong>City:</strong> {user.address.city}</p>
+                  <p><strong>State:</strong> {user.address.state}</p>
+                  <p><strong>Pincode:</strong> {user.address.pincode}</p>
+                </>
+              ) : (
+                <p>No address provided</p>
+              )}
+              <button className="edit-btn" onClick={() => setIsEditing(true)}>
+                Edit Address
               </button>
-              <button
-                className="cancel-btn"
-                onClick={() => setIsEditing(false)}
-              >
-                Cancel
-              </button>
-            </>
-          ) : (
-            <button className="edit-btn" onClick={() => setIsEditing(true)}>
-              Edit Address
-            </button>
+            </div>
           )}
         </div>
       </div>

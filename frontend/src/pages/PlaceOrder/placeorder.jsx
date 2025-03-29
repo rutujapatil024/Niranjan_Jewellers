@@ -2,9 +2,10 @@ import React, { useContext, useState, useEffect } from "react";
 import "./placeorder.css";
 import { StoreContext } from "../../Context/StoreContext";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const PlaceOrder = () => {
-  const { getTotalAmount, token, userDetails } = useContext(StoreContext);
+  const { getTotalAmount, token, userDetails, url } = useContext(StoreContext);
   const cartAmount = getTotalAmount();
   const makingCharges = cartAmount * 0.1;
   const sgst = cartAmount * 0.015;
@@ -31,7 +32,11 @@ const PlaceOrder = () => {
         lastName: userDetails.lastName || "",
         email: userDetails.email || "",
         phone: userDetails.contactNumber || "",
-        // Keep other fields empty as they might not be in userDetails
+        // Prefill address data if available
+        address: userDetails.address?.street || "",
+        city: userDetails.address?.city || "",
+        state: userDetails.address?.state || "",
+        pincode: userDetails.address?.pincode || ""
       }));
     }
   }, [userDetails]);
@@ -86,23 +91,53 @@ const PlaceOrder = () => {
   };
 
   // ✅ Handle Form Submission & Pass Data
-  const handleSubmit = (e, paymentType) => {
+  const handleSubmit = async (e, paymentType) => {
     e.preventDefault();
     if (!validate()) return;
 
-    console.log("Form Data:", form); // ✅ Debugging to check form values
-    localStorage.setItem("customer", JSON.stringify(form));
-    // ✅ Navigate to FullPaymentConfirmation with customer details
-    if (paymentType === "fullPayment") {
+    try {
+      // Save address to user profile if user is logged in
+      if (token && userDetails) {
+        await axios.put(`${url}/api/auth/user/update-address`, {
+          address: {
+            street: form.address,
+            city: form.city,
+            state: form.state,
+            pincode: form.pincode
+          }
+        }, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+      }
+
+      // Continue with order placement
+      console.log("Form Data:", form);
+      localStorage.setItem("customer", JSON.stringify(form));
+      
+      if (paymentType === "fullPayment") {
+        navigate("/full-payment", {
+          state: {
+            firstName: form.firstName,
+            lastName: form.lastName,
+            phone: form.phone,
+          },
+        });
+      } else if (paymentType === "clickCollect") {
+        navigate("/click-and-collect-payment", {
+          state: {
+            firstName: form.firstName,
+            lastName: form.lastName,
+            phone: form.phone,
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Error saving address:", error);
+      // Continue with order placement even if address save fails
       navigate("/full-payment", {
-        state: {
-          firstName: form.firstName,
-          lastName: form.lastName,
-          phone: form.phone,
-        },
-      });
-    } else if (paymentType === "clickCollect") {
-      navigate("/click-and-collect-payment", {
         state: {
           firstName: form.firstName,
           lastName: form.lastName,

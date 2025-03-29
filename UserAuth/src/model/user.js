@@ -23,7 +23,13 @@ const userSchema = new mongoose.Schema({
   contactNumber: {
     type: Number,
     required: true,
-    unique:true
+    unique: true
+  },
+  address: {
+    street: String,
+    city: String,
+    state: String,
+    pincode: String
   }
 });
 
