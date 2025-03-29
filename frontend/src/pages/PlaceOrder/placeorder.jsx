@@ -1,10 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import "./placeorder.css";
 import { StoreContext } from "../../Context/StoreContext";
 import { Link, useNavigate } from "react-router-dom";
 
 const PlaceOrder = () => {
-  const { getTotalAmount } = useContext(StoreContext);
+  const { getTotalAmount, token, userDetails } = useContext(StoreContext);
   const cartAmount = getTotalAmount();
   const makingCharges = cartAmount * 0.1;
   const sgst = cartAmount * 0.015;
@@ -21,6 +21,20 @@ const PlaceOrder = () => {
     city: "",
     state: "",
   });
+
+  // Prefill form with user details if available
+  useEffect(() => {
+    if (userDetails) {
+      setForm(prev => ({
+        ...prev,
+        firstName: userDetails.firstName || "",
+        lastName: userDetails.lastName || "",
+        email: userDetails.email || "",
+        phone: userDetails.contactNumber || "",
+        // Keep other fields empty as they might not be in userDetails
+      }));
+    }
+  }, [userDetails]);
 
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
