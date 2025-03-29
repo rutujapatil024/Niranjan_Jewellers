@@ -21,9 +21,16 @@ const StoreProvider = ({ children }) => {
         const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
 
         if (savedToken) {
-            setToken(savedToken);
-            setWishlist(savedWishlist);
-            setCart(savedCart);
+            // Verify token format
+            if (savedToken.split('.').length === 3) {
+                setToken(savedToken);
+                setWishlist(savedWishlist);
+                setCart(savedCart);
+            } else {
+                // Invalid token format, clear it
+                localStorage.removeItem("token");
+                setToken("");
+            }
         }
     }, []);
 
@@ -176,6 +183,11 @@ const StoreProvider = ({ children }) => {
         }, 0);
     };
 
+    // Add a function to check if token is valid
+    const isTokenValid = () => {
+        return token && token.split('.').length === 3;
+    };
+
     return (
         <StoreContext.Provider
             value={{
@@ -201,6 +213,7 @@ const StoreProvider = ({ children }) => {
                 setActiveCategory,
                 userDetails, // ✅ Added user details to context
                 fetchUserProfile, // ✅ Allow profile re-fetching
+                isTokenValid,
             }}
         >
             {children}

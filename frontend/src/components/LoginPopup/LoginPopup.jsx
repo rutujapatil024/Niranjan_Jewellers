@@ -75,33 +75,33 @@ const LoginPopup = ({ setShowLogin, setIsAuthenticated, setUser }) => {
   };
 
   const handleLoginSuccess = (userToken, user) => {
+    if (!userToken) {
+      console.error("No token received from server");
+      return;
+    }
     setToken(userToken);
     localStorage.setItem("token", userToken);
     localStorage.setItem("user", JSON.stringify(user));
     setShowLogin(false);
-    window.location.href = "/"; // ✅ Redirect after login
+    window.location.href = "/";
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validate()) return;
 
     try {
-      const url =
-        currState === "Login"
-          ? "http://localhost:3001/api/auth/login"
-          : "http://127.0.0.1:3001/api/auth/register";
+      const response = await axios.post(
+        `${url}/api/auth/${currState === "Login" ? "login" : "register"}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      const response = await axios.post(url, formData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      console.log("Server Response:", response.data); // Debugging Step
-
-      if (response.data.success) {
+      if (response.data.success && response.data.token) {
         handleLoginSuccess(response.data.token, response.data.user);
       } else {
         setErrorMessage(response.data.message || "Login/Sign up failed");

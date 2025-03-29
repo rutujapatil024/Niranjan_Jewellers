@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { jsPDF } from "jspdf";
+import jsPDF from "jspdf";  // Changed from: import { jsPDF } from "jspdf";
 import { StoreContext } from "../../Context/StoreContext";
 import { useLocation } from "react-router-dom";
 import "./OrderConfirmation.css";
